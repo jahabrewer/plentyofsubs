@@ -69,17 +69,4 @@ class DATABASE_CONFIG {
 		'prefix' => '',
 		//'encoding' => 'utf8',
 	);
-
-	public $ldap = array(
-		'datasource' => 'Idbroker.LdapSource',
-		'host' => 'toypiper.com',
-		'port' => 389,
-		'basedn' => 'CN=users,DC=plentyofsubs,DC=local',
-		'login' => 'manager@plentyofsubs.local',     //For Proxy Userdn
-		'password' => 'tryhardsdontfeed1!',  //For Proxy UserDN password
-		'database' => '',
-		'tls'         => false,
-		'type' => 'ActiveDirectory', //Available types are 'OpenLDAP', 'ActiveDirectory', 'Netscape'
-		'version' => 3
-	);
 }
