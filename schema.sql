@@ -5,9 +5,9 @@ USE devel
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
 	id int unsigned PRIMARY KEY AUTO_INCREMENT,
-	username varchar(255),
-	password char(40),
-	user_type_id int unsigned,
+	username varchar(50),
+	password varchar(50),
+	role varchar(20),
 	first_name varchar(32),
 	middle_initial char(1),
 	last_name varchar(32),
@@ -49,11 +49,11 @@ CREATE TABLE schools_users (
 	user_id int
 );
 
-DROP TABLE IF EXISTS user_types;
-CREATE TABLE user_types (
-	id int unsigned AUTO_INCREMENT PRIMARY KEY,
-	name varchar(32)
-);
+-- DROP TABLE IF EXISTS user_types;
+-- CREATE TABLE user_types (
+-- 	id int unsigned AUTO_INCREMENT PRIMARY KEY,
+-- 	name varchar(32)
+-- );
 
 DROP TABLE IF EXISTS education_levels;
 CREATE TABLE education_levels (
@@ -98,10 +98,10 @@ CREATE TABLE notification_types (
 );
 
 -- the application depends on this ordering
-INSERT INTO user_types (name) VALUES
-	('Admin'),
-	('Teacher'),
-	('Substitute');
+-- INSERT INTO user_types (name) VALUES
+-- 	('Admin'),
+-- 	('Teacher'),
+-- 	('Substitute');
 
 INSERT INTO education_levels (name) VALUES
 	('Some High School'),
@@ -119,15 +119,15 @@ INSERT INTO notification_types (name, string) VALUES
 
 -- set up the dev environment
 INSERT INTO schools (name, street_address) VALUES
-	('Tift County High', '1 Blue Devil Way'),
+	('John Smith High', '1 Blue Devil Way'),
 	('Eighth Street Middle', '800 W 8th St'),
 	('Matt Wilson Elementary', '123 1st St'),
 	('Len Lastinger Primary', '802 Lakeside Dr');
 
-INSERT INTO users (username, password, first_name, middle_initial, last_name, user_type_id, email_address, primary_phone, education_level_id, certification, school_id) VALUES
-	('jbrewer', 'c86440e3754643c03fa6e0ff27dcfaaf', 'James', 'X', 'Brewer', 1, 'jbrewer@example.com', '555-555-6789', null, null, null),
-	('icrawley', 'c86440e3754643c03fa6e0ff27dcfaaf', 'Ingrid', 'A', 'Crawley', 2, 'icrawley@example.com', '555-555-1290', null, null, 1),
-	('vgrandma', 'c86440e3754643c03fa6e0ff27dcfaaf', 'Victoria', 'C', 'Grandma', 3, 'vgrandma@example.com', '555-555-9934', 2, '2005-03-11', null);
+INSERT INTO users (username, password, role, first_name, middle_initial, last_name, email_address, primary_phone, education_level_id, certification, school_id) VALUES
+	('ariadne', '0336f0081bc7b681e93679021ae75720e001012f', 'admin', 'Ariadne', 'A', 'Adminis', 'ariadne@example.com', '555-555-6789', null, null, null),
+	('tess', '0336f0081bc7b681e93679021ae75720e001012f', 'teacher', 'Tess', 'T', 'Techa', 'tess@example.com', '555-555-1290', null, null, 1),
+	('steph', '0336f0081bc7b681e93679021ae75720e001012f', 'substitute', 'Steph', 'S', 'Subst', 'steph@example.com', '555-555-9934', 2, '2005-03-11', null);
 
 INSERT INTO schools_users (school_id, user_id) VALUES
 	(3, 3),

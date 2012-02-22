@@ -1,5 +1,5 @@
 <?php
-App::uses('AppModel', 'Model');
+App::uses('AppModel', 'Model', 'AuthComponent', 'Controller/Component');
 /**
  * User Model
  *
@@ -17,6 +17,27 @@ class User extends AppModel {
  * @var string
  */
 	public $displayField = 'username';
+	public $validate = array(
+		'username' => array(
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'message' => 'A username is required'
+			)
+		),
+		'password' => array(
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'message' => 'A password is required'
+			)
+		),
+		'role' => array(
+			'valid' => array(
+				'rule' => array('inList', array('admin', 'teacher', 'substitute')),
+				'message' => 'Please enter a valid role',
+				'allowEmpty' => false
+			)
+		)
+	);
 
 /**
  * belongsTo associations
@@ -24,10 +45,6 @@ class User extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'UserType' => array(
-			'className' => 'UserType',
-			'foreignKey' => 'user_type_id',
-		),
 		'EducationLevel' => array(
 			'className' => 'EducationLevel',
 			'foreignKey' => 'education_level_id',
@@ -86,5 +103,12 @@ class User extends AppModel {
 			'unique' => true,*/
 		)
 	);
+
+	public function beforeSave() {
+		if (isset($this->data[$this->alias]['password'])) {
+			$this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
+		}
+		return true;
+	}
 
 }
