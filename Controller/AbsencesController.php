@@ -47,10 +47,25 @@ class AbsencesController extends AppController {
 				$this->Session->setFlash(__('The absence could not be saved. Please, try again.'));
 			}
 		}
-		$absentees = $this->Absence->Absentee->find('list');
-		$fulfillers = $this->Absence->Fulfiller->find('list');
+		$absentees = $this->Absence->Absentee->find(
+			'list',
+			array(
+				'conditions' => array('Absentee.role' => 'teacher')
+			)
+		);
+		$fulfillers = $this->Absence->Fulfiller->find(
+			'list',
+			array(
+				'conditions' => array('Fulfiller.role' => 'substitute')
+			)
+		);
 		$schools = $this->Absence->School->find('list');
-		$this->set(compact('absentees', 'fulfillers', 'schools'));
+		
+		// set defaults for the form
+		$default_absentee_id = $this->Auth->user('id');
+		$default_school_id = $this->Auth->user('school_id');
+		
+		$this->set(compact('absentees', 'fulfillers', 'schools', 'default_absentee_id', 'default_school_id'));
 	}
 
 /**
