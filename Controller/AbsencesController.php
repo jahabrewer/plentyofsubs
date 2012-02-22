@@ -6,6 +6,31 @@ App::uses('AppController', 'Controller');
  * @property Absence $Absence
  */
 class AbsencesController extends AppController {
+	
+	public function isAuthorized($user) {
+		if (parent::isAuthorized($user)) {
+			return true;
+		}
+
+		if ($this->action === 'index') return true;
+
+		if (isset($user['role'])) {
+			if ($user['role'] === 'teacher') {
+				// teachers may always create
+				if ($this->action === 'add') return true;
+				
+				// check for ownership for RUD
+				$absence_id = $this->request->params['pass'][0];
+				if (in_array($this->action, array('view', 'edit', 'delete'))) return $this->Absence->isOwnedBy($absence_id, $user['id']);
+			} elseif ($user['role'] === 'substitute') {
+				if ($this->action === 'view') return true;
+			}
+		}
+
+		$this->Session->setFlash('You are not authorized for that action');
+		return false;
+	}
+
 
 
 /**

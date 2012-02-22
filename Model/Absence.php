@@ -49,4 +49,8 @@ class Absence extends AppModel {
 		)
 	);
 
+	public function isOwnedBy($absence_id, $user_id) {
+		return $this->field('id', array('id' => $absence_id, 'absentee_id' => $user_id)) === $absence_id;
+	}
+
 }
