@@ -124,10 +124,10 @@ INSERT INTO schools (name, street_address) VALUES
 	('Matt Wilson Elementary', '123 1st St'),
 	('Len Lastinger Primary', '802 Lakeside Dr');
 
-INSERT INTO users (username, password, first_name, middle_initial, last_name, user_type_id, email_address, primary_phone, education_level_id, certification, absence_change_notify, school_id) VALUES
-	('jbrewer', 'c86440e3754643c03fa6e0ff27dcfaaf', 'James', 'X', 'Brewer', 1, 'jbrewer@example.com', '555-555-6789', null, null, 1, null),
-	('icrawley', 'c86440e3754643c03fa6e0ff27dcfaaf', 'Ingrid', 'A', 'Crawley', 2, 'icrawley@example.com', '555-555-1290', null, null, 1, 1),
-	('vgrandma', 'c86440e3754643c03fa6e0ff27dcfaaf', 'Victoria', 'C', 'Grandma', 3, 'vgrandma@example.com', '555-555-9934', 2, '2005-03-11', 0, null);
+INSERT INTO users (username, password, first_name, middle_initial, last_name, user_type_id, email_address, primary_phone, education_level_id, certification, school_id) VALUES
+	('jbrewer', 'c86440e3754643c03fa6e0ff27dcfaaf', 'James', 'X', 'Brewer', 1, 'jbrewer@example.com', '555-555-6789', null, null, null),
+	('icrawley', 'c86440e3754643c03fa6e0ff27dcfaaf', 'Ingrid', 'A', 'Crawley', 2, 'icrawley@example.com', '555-555-1290', null, null, 1),
+	('vgrandma', 'c86440e3754643c03fa6e0ff27dcfaaf', 'Victoria', 'C', 'Grandma', 3, 'vgrandma@example.com', '555-555-9934', 2, '2005-03-11', null);
 
 INSERT INTO schools_users (school_id, user_id) VALUES
 	(3, 3),
