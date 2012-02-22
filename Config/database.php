@@ -65,7 +65,7 @@ class DATABASE_CONFIG {
 		'host' => 'localhost',
 		'login' => 'cake',
 		'password' => 'bad_password',
-		'database' => 'authtest',
+		'database' => 'devel',
 		'prefix' => '',
 		//'encoding' => 'utf8',
 	);
