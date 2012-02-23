@@ -12,6 +12,12 @@ class AppController extends Controller {
 
 	public function beforeFilter() {
 		$this->Auth->allow('display');
+		$logged_in = $this->Auth->loggedIn();
+		if ($logged_in) {
+			$this->set('logged_in_username', $this->Auth->user('username'));
+			$this->set('logged_in_role', $this->Auth->user('role'));
+		}
+		$this->set(compact('logged_in'));
 	}
 
 	public function isAuthorized($user) {
