@@ -1,18 +1,32 @@
 <div class="absences index">
 	<h2><?php echo __('Absences');?></h2>
+	<div>
+		<?php echo $this->Form->create('filter');?>
+			<fieldset>
+			<?php
+			echo $this->Form->radio('date_select', array('anytime', 'before', 'after'));
+			echo $this->Form->dateTime('date', 'DMY', null, array('empty' => false));
+			echo '<br />';
+			echo $this->Form->select('schools', $schools, array('empty' => 'All Schools'));
+			echo '<br />';
+			echo $this->Form->select('teachers', $teachers, array('empty' => 'All Teachers'));
+			?>
+			</fieldset>
+		<?php echo $this->Form->end(__('Apply Filter'));?>
+	</div>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
-			<th><?php echo $this->Paginator->sort('id');?></th>
-			<th><?php echo $this->Paginator->sort('absentee_id');?></th>
-			<th><?php echo $this->Paginator->sort('fulfiller_id');?></th>
-			<th><?php echo $this->Paginator->sort('school_id');?></th>
-			<th><?php echo $this->Paginator->sort('room');?></th>
-			<th><?php echo $this->Paginator->sort('start');?></th>
-			<th><?php echo $this->Paginator->sort('end');?></th>
-			<th><?php echo $this->Paginator->sort('comment');?></th>
-			<th><?php echo $this->Paginator->sort('created');?></th>
-			<th><?php echo $this->Paginator->sort('modified');?></th>
-			<th class="actions"><?php echo __('Actions');?></th>
+		<th><?php echo $this->Paginator->sort('id');?></th>
+		<th><?php echo $this->Paginator->sort('absentee_id');?></th>
+		<th><?php echo $this->Paginator->sort('fulfiller_id');?></th>
+		<th><?php echo $this->Paginator->sort('school_id');?></th>
+		<th><?php echo $this->Paginator->sort('room');?></th>
+		<th><?php echo $this->Paginator->sort('start');?></th>
+		<th><?php echo $this->Paginator->sort('end');?></th>
+		<th><?php echo $this->Paginator->sort('comment');?></th>
+		<th><?php echo $this->Paginator->sort('created');?></th>
+		<th><?php echo $this->Paginator->sort('modified');?></th>
+		<th class="actions"><?php echo __('Actions');?></th>
 	</tr>
 	<?php
 	foreach ($absences as $absence): ?>

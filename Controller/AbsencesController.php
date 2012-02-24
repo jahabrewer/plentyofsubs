@@ -12,8 +12,6 @@ class AbsencesController extends AppController {
 			return true;
 		}
 
-		if ($this->action === 'index') return true;
-
 		if (isset($user['role'])) {
 			if ($user['role'] === 'teacher') {
 				// teachers may always create
@@ -23,7 +21,7 @@ class AbsencesController extends AppController {
 				$absence_id = $this->request->params['pass'][0];
 				if (in_array($this->action, array('view', 'edit', 'delete'))) return $this->Absence->isOwnedBy($absence_id, $user['id']);
 			} elseif ($user['role'] === 'substitute') {
-				if ($this->action === 'view') return true;
+				if (in_array($this->action, array('view', 'index'))) return true;
 			}
 		}
 
@@ -39,8 +37,36 @@ class AbsencesController extends AppController {
  * @return void
  */
 	public function index() {
+		$conditions = array();
+		if ($this->request->is('post')) {
+			define('BEFORE', '1');
+			define('AFTER', '2');
+			// build conditions from filter
+			$data = $this->request->data['filter'];
+
+			if ($data['date_select'] == BEFORE) {
+				$conditions['Absence.start <'] = $data['date']['year'].'-'.$data['date']['month'].'-'.$data['date']['day'];
+			} else if ($data['date_select'] == AFTER) {
+				$conditions['Absence.start >'] = $data['date']['year'].'-'.$data['date']['month'].'-'.$data['date']['day'];
+			}
+
+			if (isset($data['schools']) && !empty($data['schools'])) {
+				$conditions['Absence.school_id'] = $data['schools'];
+			}
+
+			if (isset($data['teachers']) && !empty($data['teachers'])) {
+				$conditions['Absence.absentee_id'] = $data['teachers'];
+			}
+
+			$this->paginate = array(
+				'conditions' => $conditions
+			);
+		}
 		$this->Absence->recursive = 0;
 		$this->set('absences', $this->paginate());
+		$schools = $this->Absence->School->find('list');
+		$teachers = $this->Absence->Absentee->find('list', array('conditions' => array('Absentee.role' => 'teacher')));
+		$this->set(compact('conditions', 'schools', 'teachers'));
 	}
 
 /**
