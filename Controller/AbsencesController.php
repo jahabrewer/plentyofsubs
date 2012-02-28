@@ -21,7 +21,7 @@ class AbsencesController extends AppController {
 				$absence_id = $this->request->params['pass'][0];
 				if (in_array($this->action, array('view', 'edit', 'delete'))) return $this->Absence->isOwnedBy($absence_id, $user['id']);
 			} elseif ($user['role'] === 'substitute') {
-				if (in_array($this->action, array('view', 'index'))) return true;
+				if (in_array($this->action, array('view', 'index', 'apply', 'retract', 'renege'))) return true;
 			}
 		}
 
@@ -67,6 +67,65 @@ class AbsencesController extends AppController {
 		$schools = $this->Absence->School->find('list');
 		$teachers = $this->Absence->Absentee->find('list', array('conditions' => array('Absentee.role' => 'teacher')));
 		$this->set(compact('conditions', 'schools', 'teachers'));
+	}
+
+	public function apply($id = null) {
+		$this->Absence->id = $id;
+		if (!$this->Absence->exists()) {
+			throw new NotFoundException(__('Invalid absence'));
+		}
+
+		$data = array(
+			'user_id' => $this->Auth->user('id'),
+			'absence_id' => $id
+		);
+		$this->Absence->Application->create();
+		if ($this->Absence->Application->save($data)) {
+			$this->Session->setFlash(__('Your application was successful'));
+		} else {
+			$this->Session->setFlash(__('Your application failed'));
+		}
+		$this->redirect($this->referer());
+	}
+
+	public function retract($id = null) {
+		$this->Absence->id = $id;
+		if (!$this->Absence->exists()) {
+			throw new NotFoundException(__('Invalid absence'));
+		}
+
+		$conditions = array(
+			'Application.user_id' => $this->Auth->user('id'),
+			'Application.absence_id' => $id
+		);
+
+		if ($this->Absence->Application->deleteAll($conditions)) {
+			$this->Session->setFlash('Application retracted');
+		} else {
+			$this->Session->setFlash('Application could not be retracted');
+		}
+		$this->redirect($this->referer());
+	}
+
+	public function renege($id = null) {
+		$this->Absence->id = $id;
+		if (!$this->Absence->exists()) {
+			throw new NotFoundException(__('Invalid absence'));
+		}
+
+		// make sure the user holds this absence
+		$fulfiller_id = $this->Absence->field('fulfiller_id');
+		if ($fulfiller_id != $this->Auth->user('id')) {
+			$this->Session->setFlash('You are not the fulfiller of that absence');
+		}
+
+		if ($this->Absence->saveField('fulfiller_id', null)) {
+			$this->Session->setFlash('You successfully reneged on the absence');
+		} else {
+			$this->Session->setFlash('You could not renege on this absence');
+		}
+
+		$this->redirect($this->referer());
 	}
 
 /**
