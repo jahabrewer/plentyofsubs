@@ -1,6 +1,17 @@
 <?php
+/**
+ * This class holds only some of the application related functions,
+ * particularly the ones that are easier to code when addressed with an
+ * application ID.
+ */
 class ApplicationsController extends AppController {
 
+/**
+ * Determines whether users are authorized for actions
+ *
+ * @param array $user Contains information about the logged in user
+ * @return boolean Whether the user is authorized for an action
+ */
 	public function isAuthorized($user) {
 		if (parent::isAuthorized($user)) {
 			return true;
@@ -19,6 +30,13 @@ class ApplicationsController extends AppController {
 		return false;
 	}
 
+/**
+ * Marks the applicant user as the fulfiller of an absence and deletes
+ * any other applications for the same absence
+ *
+ * @param string $id The accepted application (references a user and absence)
+ * @return void
+ */
 	public function accept($id = null) {
 		// auth module ensures ownership, so no need to check here
 		$this->Application->id = $id;
@@ -43,6 +61,12 @@ class ApplicationsController extends AppController {
 		$this->redirect($this->referer());
 	}
 
+/**
+ * Deletes an application for an absence
+ *
+ * @param string $id The application to delete
+ * @return void
+ */
 	public function reject($id = null) {
 		// auth module ensures ownership, so no need to check here
 		$this->Application->id = $id;

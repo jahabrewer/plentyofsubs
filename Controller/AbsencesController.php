@@ -7,6 +7,12 @@ App::uses('AppController', 'Controller');
  */
 class AbsencesController extends AppController {
 	
+/**
+ * Determines whether users are authorized for actions
+ *
+ * @param array $user Contains information about the logged in user
+ * @return boolean Whether the user is authorized for an action
+ */
 	public function isAuthorized($user) {
 		if (parent::isAuthorized($user)) {
 			return true;
@@ -28,8 +34,6 @@ class AbsencesController extends AppController {
 		$this->Session->setFlash('You are not authorized for that action');
 		return false;
 	}
-
-
 
 /**
  * index method
@@ -69,6 +73,12 @@ class AbsencesController extends AppController {
 		$this->set(compact('conditions', 'schools', 'teachers'));
 	}
 
+/**
+ * Creates an application for an absence from the logged in user
+ *
+ * @param string id Absence to apply for
+ * @return void
+ */
 	public function apply($id = null) {
 		$this->Absence->id = $id;
 		if (!$this->Absence->exists()) {
@@ -88,6 +98,12 @@ class AbsencesController extends AppController {
 		$this->redirect($this->referer());
 	}
 
+/**
+ * Deletes an application for an absence from the logged in user
+ *
+ * @param string id Absence from which to delete application
+ * @return void
+ */
 	public function retract($id = null) {
 		$this->Absence->id = $id;
 		if (!$this->Absence->exists()) {
@@ -107,6 +123,12 @@ class AbsencesController extends AppController {
 		$this->redirect($this->referer());
 	}
 
+/**
+ * Removes the logged in user as the fulfilled of an absence
+ *
+ * @param string id Absence from which to remove fulfiller
+ * @return void
+ */
 	public function renege($id = null) {
 		$this->Absence->id = $id;
 		if (!$this->Absence->exists()) {
@@ -147,7 +169,7 @@ class AbsencesController extends AppController {
  *
  * @return void
  */
-	public function add() {
+public function add() {
 		if ($this->request->is('post')) {
 			$this->Absence->create();
 			if ($this->Absence->save($this->request->data)) {

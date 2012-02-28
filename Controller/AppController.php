@@ -1,4 +1,7 @@
 <?php
+/**
+ * Functions that will be available to all other controllers
+ */
 class AppController extends Controller {
 
 	public $components = array(
@@ -10,6 +13,9 @@ class AppController extends Controller {
 			)
 		);
 
+/**
+ * Sets up the Auth module for the entire site
+ */
 	public function beforeFilter() {
 		$this->Auth->allow('display');
 		$logged_in = $this->Auth->loggedIn();
@@ -20,6 +26,14 @@ class AppController extends Controller {
 		$this->set(compact('logged_in'));
 	}
 
+/**
+ * Determines whether users are authorized for actions
+ * This is the globally effective version of this method. All other versions
+ * of this function will approve a user if this one does.
+ *
+ * @param array $user Contains information about the logged in user
+ * @return boolean Whether the user is authorized for an action
+ */
 	public function isAuthorized($user) {
 		// allow admins everywhere but sub-specific actions
 		if (isset($user['role']) && $user['role'] === 'admin' && !in_array($this->action, array('apply', 'retract'))) {
