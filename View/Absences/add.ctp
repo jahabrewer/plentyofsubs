@@ -4,7 +4,7 @@
 		<legend><?php echo __('Add Absence'); ?></legend>
 	<?php
 		echo $this->Form->input('absentee_id', array('default' => $default_absentee_id));
-		echo $this->Form->input('fulfiller_id');
+		echo $this->Form->input('fulfiller_id', array('empty' => 'Unspecified'));
 		echo $this->Form->input('school_id', array('default' => $default_school_id));
 		echo $this->Form->input('room');
 		echo $this->Form->input('start');

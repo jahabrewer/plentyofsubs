@@ -49,12 +49,6 @@ CREATE TABLE schools_users (
 	user_id int
 );
 
--- DROP TABLE IF EXISTS user_types;
--- CREATE TABLE user_types (
--- 	id int unsigned AUTO_INCREMENT PRIMARY KEY,
--- 	name varchar(32)
--- );
-
 DROP TABLE IF EXISTS education_levels;
 CREATE TABLE education_levels (
 	id int unsigned AUTO_INCREMENT PRIMARY KEY,
@@ -82,7 +76,7 @@ CREATE TABLE applications (
 DROP TABLE IF EXISTS notifications;
 CREATE TABLE notifications (
 	id int unsigned AUTO_INCREMENT PRIMARY KEY,
-	notification_type_id int unsigned,
+	notification_type varchar(31),
 	user_id int unsigned,
 	absence_id int unsigned,
 	other_id int unsigned,
@@ -90,32 +84,13 @@ CREATE TABLE notifications (
 	created datetime
 );
 
-DROP TABLE IF EXISTS notification_types;
-CREATE TABLE notification_types (
-	id int unsigned AUTO_INCREMENT PRIMARY KEY,
-	name varchar(64),
-	string text
-);
-
--- the application depends on this ordering
--- INSERT INTO user_types (name) VALUES
--- 	('Admin'),
--- 	('Teacher'),
--- 	('Substitute');
-
 INSERT INTO education_levels (name) VALUES
 	('Some High School'),
 	('High School'),
-	("Associate's Degree"),
-	("Bachelor's Degree"),
-	("Master's Degree"),
+	('Associate\'s Degree'),
+	('Bachelor\'s Degree'),
+	('Master\'s Degree'),
 	('Doctorate');
-
-INSERT INTO notification_types (name, string) VALUES
-	('application_accepted', '%other_firstname% %other_lastname% gave you their %absence_start% absence'),
-	('absence_released', '%other_firstname% %other_lastname% will no longer fulfill your %absence_start% absence'),
-	('application_submitted', '%other_firstname% %other_lastname% submitted an application for your %absence_start% absence'),
-	('application_retracted', '%other_firstname% %other_lastname% retracted their application for your %absence_start% absence');
 
 -- set up the dev environment
 INSERT INTO schools (name, street_address) VALUES

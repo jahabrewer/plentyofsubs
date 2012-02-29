@@ -58,6 +58,9 @@ class ApplicationsController extends AppController {
 			$this->Session->setFlash('The application could not be accepted');
 		}
 
+		// generate notification
+		$this->_create_notification('application_accepted', $absence_id, $applicant_id, $this->Auth->user('id'));
+
 		$this->redirect($this->referer());
 	}
 

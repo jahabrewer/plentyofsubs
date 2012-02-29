@@ -16,10 +16,6 @@ class Notification extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'NotificationType' => array(
-			'className' => 'NotificationType',
-			'foreignKey' => 'notification_type_id',
-		),
 		'User' => array(
 			'className' => 'User',
 			'foreignKey' => 'user_id',

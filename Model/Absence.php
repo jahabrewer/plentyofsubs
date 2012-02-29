@@ -53,4 +53,8 @@ class Absence extends AppModel {
 		return $this->field('id', array('id' => $absence_id, 'absentee_id' => $user_id)) === $absence_id;
 	}
 
+	public function isFulfilledBy($absence_id, $user_id) {
+		return $this->field('id', array('id' => $absence_id, 'fulfiller_id' => $user_id)) === $absence_id;
+	}
+
 }

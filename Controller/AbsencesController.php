@@ -19,15 +19,18 @@ class AbsencesController extends AppController {
 		}
 
 		if (isset($user['role'])) {
+			$absence_id = $this->request->params['pass'][0];
 			if ($user['role'] === 'teacher') {
 				// teachers may always create
 				if ($this->action === 'add') return true;
 				
 				// check for ownership for RUD
-				$absence_id = $this->request->params['pass'][0];
 				if (in_array($this->action, array('view', 'edit', 'delete'))) return $this->Absence->isOwnedBy($absence_id, $user['id']);
 			} elseif ($user['role'] === 'substitute') {
-				if (in_array($this->action, array('view', 'index', 'apply', 'retract', 'renege'))) return true;
+				if (in_array($this->action, array('view', 'index', 'apply', 'retract'))) return true;
+
+				// check fulfiller ownership for renege
+				if ($this->action == 'renege') return $this->Absence->isFulfilledBy($absence_id, $user['id']);
 			}
 		}
 
@@ -92,6 +95,10 @@ class AbsencesController extends AppController {
 		$this->Absence->Application->create();
 		if ($this->Absence->Application->save($data)) {
 			$this->Session->setFlash(__('Your application was successful'));
+
+			// create notification
+			$absentee_id = $this->Absence->field('absentee_id');
+			$this->_create_notification('application_created', $id, $absentee_id, $this->Auth->user('id'));
 		} else {
 			$this->Session->setFlash(__('Your application failed'));
 		}
@@ -117,6 +124,10 @@ class AbsencesController extends AppController {
 
 		if ($this->Absence->Application->deleteAll($conditions)) {
 			$this->Session->setFlash('Application retracted');
+
+			// create notification
+			$absentee_id = $this->Absence->field('absentee_id');
+			$this->_create_notification('application_retracted', $id, $absentee_id, $this->Auth->user('id'));
 		} else {
 			$this->Session->setFlash('Application could not be retracted');
 		}
@@ -130,19 +141,18 @@ class AbsencesController extends AppController {
  * @return void
  */
 	public function renege($id = null) {
+		// auth module ensures that logged in user is fulfiller
 		$this->Absence->id = $id;
 		if (!$this->Absence->exists()) {
 			throw new NotFoundException(__('Invalid absence'));
 		}
 
-		// make sure the user holds this absence
-		$fulfiller_id = $this->Absence->field('fulfiller_id');
-		if ($fulfiller_id != $this->Auth->user('id')) {
-			$this->Session->setFlash('You are not the fulfiller of that absence');
-		}
-
 		if ($this->Absence->saveField('fulfiller_id', null)) {
 			$this->Session->setFlash('You successfully reneged on the absence');
+
+			// create notification
+			$absentee_id = $this->Absence->field('absentee_id');
+			$this->_create_notification('fulfiller_reneged', $id, $absentee_id, $this->Auth->user('id'));
 		} else {
 			$this->Session->setFlash('You could not renege on this absence');
 		}
@@ -174,7 +184,8 @@ public function add() {
 			$this->Absence->create();
 			if ($this->Absence->save($this->request->data)) {
 				$this->Session->setFlash(__('The absence has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$absence_id = $this->Absence->getLastInsertId();
+				$this->redirect(array('action' => 'view', $absence_id));
 			} else {
 				$this->Session->setFlash(__('The absence could not be saved. Please, try again.'));
 			}
