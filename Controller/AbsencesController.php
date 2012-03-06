@@ -259,4 +259,102 @@ public function add() {
 		$this->Session->setFlash(__('Absence was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
+
+/**
+ * Wraps _update_or_create_approval
+ *
+ * @param string $id
+ * @return void
+ */
+	public function approval($id = null) {
+		$this->_update_or_create_approval($id, true);
+	}
+
+/**
+ * Wraps _update_or_create_approval
+ *
+ * @param string $id
+ * @return void
+ */
+	public function denial($id = null) {
+		$this->_update_or_create_approval($id, false);
+	}
+
+/**
+ * Marks an absence as approved or denied by an admin
+ * 
+ * If there's already an approval and it contradicts the requested status
+ * (approved or denied), change it and update the approver. If there is no
+ * approval, create it. (A negative approval means an admin has reviewed
+ * the absence and denied it, so it isn't really approved, but an approval
+ * record is created that notes that it was negative)
+ *
+ * @param string $id The absence to approve or deny
+ * @param boolean $approve Whether to approve or deny the absence
+ * @return void
+ */
+	private function _update_or_create_approval($id, $approve) {
+		$this->Absence->id = $id;
+		if (!$this->Absence->exists()) {
+			throw new NotFoundException(__('Invalid absence'));
+		}
+
+		// is there already an approval?
+		$approval_exists = false;
+		$absence = $this->Absence->read();
+		$approval_exists = isset($absence['Approval']) && !empty($absence['Approval']['id']);
+
+		$this->set(compact('approval_exists'));
+		$this->set('test', !empty($absence['Approval']['id']));
+
+		if ($approval_exists) {
+			// if there is an existing approval, update it
+			$this->Absence->Approval->id = $absence['Approval']['id'];
+		} else {
+			// if there is no approval, make one
+			$this->Absence->Approval->create();
+		}
+
+		// figure out whether to send an update based on the logic
+		// given in the big method comments
+		$approval_positive = $absence['Approval']['approved'];
+		$update_approval =
+		($approval_exists && $approve && !$approval_positive) ||
+		($approval_exists && !$approve && $approval_positive) ||
+		(!$approval_exists);
+
+		if ($update_approval) {
+			$data = array(
+				'approver_id' => $this->Auth->user('id'),
+				'approved' => $approve ? '1' : '0'
+			);
+
+			if ($this->Absence->Approval->save($data)) {
+				$this->Session->setFlash(__('Your ' . ($approve ? 'approval' : 'denial') . ' of this absence was successful'));
+
+				// update the absence with a reference if the
+				// approval is new
+				if (!$approval_exists) $this->Absence->saveField('approval_id', $this->Absence->Approval->getLastInsertId());
+
+				// create notification
+				$absentee_id = $this->Absence->field('absentee_id');
+				$this->_create_notification($approve ? 'absence_approved' : 'absence_denied', $id, $absentee_id, $this->Auth->user('id'));
+			} else {
+				$this->Session->setFlash(__('Your approval failed'));
+			}
+		} else {
+			$this->Session->setFlash(__('No change was made to the existing approval of this absence'));
+		}
+
+		$this->redirect(array('action' => 'view', $id));
+	}
+
+/**
+ * Marks an absence as denied by an admin
+ *
+ * @param string $id
+ * @return void
+ */
+	public function deny($id = null) {
+	}
 }

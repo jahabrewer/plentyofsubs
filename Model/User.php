@@ -86,6 +86,11 @@ class User extends AppModel {
 			'foreignKey' => 'other_id',
 			'dependent' => false,
 		),
+		'Approval' => array(
+			'className' => 'Approval',
+			'foreignKey' => 'approver_id',
+			'dependent' => false,
+		),
 	);
 
 

@@ -28,7 +28,11 @@ class Absence extends AppModel {
 		'School' => array(
 			'className' => 'School',
 			'foreignKey' => 'school_id',
-		)
+		),
+		'Approval' => array(
+			'className' => 'Approval',
+			'foreignKey' => 'approval_id',
+		),
 	);
 
 /**

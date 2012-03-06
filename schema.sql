@@ -31,6 +31,16 @@ CREATE TABLE absences (
 	start datetime,
 	end datetime,
 	comment text,
+	approval_id int unsigned,
+	created datetime,
+	modified datetime
+);
+
+DROP TABLE IF EXISTS approvals;
+CREATE TABLE approvals (
+	id int unsigned AUTO_INCREMENT PRIMARY KEY,
+	approved tinyint(1) DEFAULT 0,
+	approver_id int unsigned,
 	created datetime,
 	modified datetime
 );
