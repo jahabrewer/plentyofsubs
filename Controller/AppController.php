@@ -7,7 +7,7 @@ class AppController extends Controller {
 	public $components = array(
 		'Session',
 		'Auth' => array(
-			'loginRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
+			'loginRedirect' => array('controller' => 'absences', 'action' => 'dashboard'),
 			'logoutRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
 			'authorize' => array('Controller'),
 			)
@@ -20,8 +20,8 @@ class AppController extends Controller {
 		$this->Auth->allow('display');
 		$logged_in = $this->Auth->loggedIn();
 		if ($logged_in) {
-			$this->set('logged_in_username', $this->Auth->user('username'));
-			$this->set('logged_in_role', $this->Auth->user('role'));
+			$this->set('logged_in_firstname', $this->Auth->user('first_name'));
+			$this->set('logged_in_userid', $this->Auth->user('id'));
 		}
 		$this->set(compact('logged_in'));
 	}

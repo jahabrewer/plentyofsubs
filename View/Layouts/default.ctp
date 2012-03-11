@@ -16,45 +16,96 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-$cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<?php echo $this->Html->charset(); ?>
 	<title>
-		<?php echo $cakeDescription ?>:
+		<?php echo 'PlentyOfSubs | '; ?>
 		<?php echo $title_for_layout; ?>
 	</title>
 	<?php
 		echo $this->Html->meta('icon');
 
-		echo $this->Html->css('cake.generic');
+		//echo $this->Html->css('cake.generic');
+		echo $this->Html->css('layout');
+		echo $this->Html->css('pagelayers');
+		echo $this->Html->css('formatting');
 
+		echo $this->Html->script('jquery-1.7.1');
+		echo $this->Html->script('layout');
 		echo $scripts_for_layout;
 	?>
 </head>
 <body>
-	<div id="container">
-		<div id="header">
-			<h1><?php echo $this->Html->link($cakeDescription, 'http://cakephp.org'); ?></h1>
-			<?php if ($logged_in) echo "$logged_in_username // $logged_in_role ".$this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?>
-		</div>
-		<div id="content">
+	<div id="header">
+		<div id="logo"><?php echo $this->Html->image('layout/logo.png', array('alt' => 'PlentyOfSubs', 'url' => array('controller' => 'absences', 'action' => 'dashboard'))); ?></div>
+		<?php if ($logged_in): ?>
+			<div id="welcomeMessage">Welcome back, <span class="userName"><?php echo $logged_in_firstname; ?></span>!</div>
+			<ul id="nav">
+			<!-- Put class="current" in the <a> tag corresponding to which page this is -->
+			  <li><?php echo $this->Html->link('Dashboard', array('controller' => 'absences', 'action' => 'dashboard'), array('class' => 'current')); ?></li>
+			  <li><a href="#">Absences</a>
+			    <ul>
+			      <li><?php echo $this->Html->link('Manage Absence', array('controller' => 'absences', 'action' => 'index')); ?></li>
+			      <li><?php echo $this->Html->link('Create Absence', array('controller' => 'absences', 'action' => 'add')); ?></li>
+			      <li><a href="#">View Applicants</a></li>
+			    </ul>
+			  </li>
+			  <li><a href="#">Profile</a>
+			    <ul>
+			      <li><?php echo $this->Html->link('Edit Profile', array('controller' => 'users', 'action' => 'edit', $logged_in_userid)); ?></li>
+			      <li><a href="#">Messages</a></li>
+			    </ul>
+			  </li>
+			  <li><a href="#">Account</a>
+			    <ul>
+			      <li><a href="#">Account Settings</a></li>
+			      <li><a href="#">Privacy Settings</a></li>
+			    </ul>
+			  </li>
+			  <li><a href="#">Help</a>
+			    <ul>
+			      <li><a href="#">How To Guide</a></li>
+			      <li><a href="#">FAQs</a></li>
+			    </ul>
+			  </li>
+			  <li><?php echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?></li>
+			</ul>
+		<?php else: ?>
+			<ul id="nav">
+			  <li><?php echo $this->Html->link('Login', array('controller' => 'users', 'action' => 'login')); ?></li>
+			</ul>
+		<?php endif; ?>
+	</div>
+	<div id="bodyContainer">
+		<?php echo $this->Session->flash(); ?>
 
-			<?php echo $this->Session->flash(); ?>
+		<?php echo $content_for_layout; ?>
 
-			<?php echo $content_for_layout; ?>
+	</div>
 
+	<div class="spacer"></div>
+
+	<div id="footer">
+		<div class="leftAligned">
+			<ul>
+				<li><a href="#">About</a></li>
+				|
+				<li><a href="#">Privacy</a></li>
+				|
+				<li><a href="#">Terms of Use</a></li>
+				|
+				<li><a href="#">Feedback</a></li>
+				|
+				<li><a href="#">Contact</a></li>
+				|
+				<li><a href="#">Help</a></li>
+			</ul>
+			<p>PlentyOfSubs is free software licensed under the <?php echo $this->Html->link('GNU GPL v3', 'http://www.gnu.org/licenses/gpl.txt'); ?></p>
 		</div>
-		<div id="footer">
-			<?php echo $this->Html->link(
-					$this->Html->image('cake.power.gif', array('alt' => $cakeDescription, 'border' => '0')),
-					'http://www.cakephp.org/',
-					array('target' => '_blank', 'escape' => false)
-				);
-			?>
-		</div>
+		<div class="rightAligned"> PlentyOfSubs Copyright 2012 Janzen Brewer, Nathaniel Tinkler, Jianzhuo Wu</div>
 	</div>
 	<?php echo $this->element('sql_dump'); ?>
 </body>

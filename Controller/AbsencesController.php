@@ -18,6 +18,8 @@ class AbsencesController extends AppController {
 			return true;
 		}
 
+		if ($this->action === 'dashboard') return true;
+
 		if (isset($user['role'])) {
 			$absence_id = $this->request->params['pass'][0];
 			if ($user['role'] === 'teacher') {
@@ -349,12 +351,55 @@ public function add() {
 		$this->redirect(array('action' => 'view', $id));
 	}
 
-/**
- * Marks an absence as denied by an admin
- *
- * @param string $id
- * @return void
- */
-	public function deny($id = null) {
+	public function dashboard() {
+		$this->set('title_for_layout', 'Dashboard');
+		$user_id = $this->Auth->user('id');
+		$user_role = $this->Auth->user('role');
+
+		// count upcoming absences (conditions depend on role)
+		$num_upcoming_absences = -1;
+		if ($user_role != 'admin') $num_upcoming_absences = $this->Absence->find('count', array('conditions' => array(
+			'Absence.' . ($user_role=='teacher' ? 'absentee_id' : 'fulfiller_id') => $user_id,
+			'start > NOW()'
+		)));
+
+		// get a short list of upcoming absences
+		if ($user_role != 'admin') {
+			$absences = $this->Absence->find('all', array(
+				'conditions' => array(
+					'Absence.' . ($user_role=='teacher' ? 'absentee_id' : 'fulfiller_id') => $user_id,
+					'start > NOW()'
+				),
+				'fields' => array('Absence.id', 'Absence.start', 'Absence.room', 'School.abbreviation', 'Approval.id'),
+				'limit' => 5,
+				'order' => 'Absence.start ASC'
+			));
+			$this->set('absences', $absences);
+		}
+
+		// organize a list of applicants from the absence data if
+		// user is a teacher
+		if ($user_role == 'teacher') {
+			$applicants = $this->Absence->Application->find('all', array(
+				'conditions' => array(
+					'Absence.absentee_id' => $user_id
+				),
+				'fields' => array('User.first_name', 'User.last_name', 'Absence.start'),
+				'group' => 'User.username',
+				'limit' => 5,
+				'order' => 'Application.id DESC'
+			));
+			$this->set('applicants', $applicants);
+		}
+
+		// retrieve notifications
+		$notifications = $this->Absence->Notification->find('all', array(
+			'conditions' => array('Notification.user_id' => $user_id),
+			'fields' => array('Other.first_name', 'Other.last_name', 'Notification.notification_type', 'Notification.created', 'Absence.start'),
+			'limit' => 5,
+			'order' => 'Notification.created DESC'
+		));
+
+		$this->set(compact('num_upcoming_absences', 'notifications'));
 	}
 }

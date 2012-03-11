@@ -49,6 +49,7 @@ DROP TABLE IF EXISTS schools;
 CREATE TABLE schools (
 	id int unsigned AUTO_INCREMENT PRIMARY KEY,
 	name varchar(256),
+	abbreviation varchar(8),
 	street_address text
 );
 
@@ -103,11 +104,11 @@ INSERT INTO education_levels (name) VALUES
 	('Doctorate');
 
 -- set up the dev environment
-INSERT INTO schools (name, street_address) VALUES
-	('John Smith High', '1 Blue Devil Way'),
-	('Eighth Street Middle', '800 W 8th St'),
-	('Matt Wilson Elementary', '123 1st St'),
-	('Len Lastinger Primary', '802 Lakeside Dr');
+INSERT INTO schools (name, abbreviation, street_address) VALUES
+	('John Smith High', 'JSH', '1 Blue Devil Way'),
+	('Eighth Street Middle', 'ESM', '800 W 8th St'),
+	('Matt Wilson Elementary', 'MWE', '123 1st St'),
+	('Len Lastinger Primary', 'LLP', '802 Lakeside Dr');
 
 INSERT INTO users (username, password, role, first_name, middle_initial, last_name, email_address, primary_phone, education_level_id, certification, school_id) VALUES
 	('ariadne', '0336f0081bc7b681e93679021ae75720e001012f', 'admin', 'Ariadne', 'A', 'Adminis', 'ariadne@example.com', '555-555-6789', null, null, null),

@@ -1,1 +1,1 @@
-generic home page content and a <?php echo $this->Html->link('link to login', array('controller' => 'users', 'action' => 'login')); ?> or <?php echo $this->Html->link('logout', array('controller' => 'users', 'action' => 'logout')); ?>
+generic home page content

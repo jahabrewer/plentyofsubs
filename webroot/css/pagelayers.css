@@ -1,0 +1,43 @@
+@charset "UTF-8";
+/* PlentyOfSubs Page Layers CSS
+	Jianzhuo Wu, March 2012 */
+	
+/* --- DASHBOARD PAGE --- */
+#dashboardNewsList {
+	list-style:none;
+	padding:0;
+}
+
+#dashboardNewsList a li {
+	color:#000000;
+	font-weight:normal;
+	padding:12px 6px 0;
+	border-bottom:#000000 1px dotted;
+}
+
+#dashboardNewsList a:last-child li {
+	border:0;
+}
+
+#dashboardNewsList a li:hover {
+	background:#dbf3ff;
+}
+
+#dashboardNewsList a li p {
+	text-indent:2em;
+}
+
+#dashboardCalendar {
+}
+
+#dashboardNews, #dashboardCalendar {
+	margin:0 0 40px;
+}
+
+#dashboardAbsenceList, #dashboardAbsenceList {
+	margin:0 0 20px;
+}
+
+#dashboardAbsenceList table, #dashboardApplicantsList table {
+	border:1px #000 solid;
+}
