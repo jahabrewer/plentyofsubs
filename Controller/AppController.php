@@ -6,6 +6,7 @@ class AppController extends Controller {
 
 	public $components = array(
 		'Session',
+		'Security',
 		'Auth' => array(
 			'loginRedirect' => array('controller' => 'absences', 'action' => 'dashboard'),
 			'logoutRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
@@ -17,6 +18,9 @@ class AppController extends Controller {
  * Sets up the Auth module for the entire site
  */
 	public function beforeFilter() {
+		// uncomment the two below lines to turn on SSL
+		//$this->Security->blackHoleCallback = 'forceSSL';
+		//$this->Security->requireSecure();
 		$this->Auth->allow('display');
 		$logged_in = $this->Auth->loggedIn();
 		if ($logged_in) {
@@ -24,6 +28,15 @@ class AppController extends Controller {
 			$this->set('logged_in_userid', $this->Auth->user('id'));
 		}
 		$this->set(compact('logged_in'));
+	}
+
+/**
+ * This callback redirects users to the SSL version of the requested page
+ *
+ * @param string $type Which type of security error triggered the callback
+ */
+	public function forceSSL($type) {
+		if ($type === 'secure') $this->redirect('https://localhost'.$this->here);
 	}
 
 /**
