@@ -2,9 +2,6 @@
 /* PlentyOfSubs Layout CSS
 	Jianzhuo Wu, March 2012 */
 
-
-
-/* --- LAYOUT DIVS  --- */
 /* --- HEADER DIVS --- */
 #header {
 	position:relative;
@@ -177,7 +174,9 @@
 #sideNav {
 	list-style:none;
 	display:block;
+	font-size:0.9125em;
 	text-align:left;
+	letter-spacing:-0.1em;
 	margin:0;
 	padding:0;
 }
@@ -203,18 +202,6 @@
 #sideNav li img {
 	vertical-align:bottom;
 	margin-right:10px;
-}
-
-#leftContent {
-	float:left;
-	width:466px;
-	margin:0 24px 0 180px;
-}
-
-#rightContent {
-	float:right;
-	width:286px;
-	margin:0;
 }
 
 /* --- FOOTER DIVS --- */

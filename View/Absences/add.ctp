@@ -1,4 +1,5 @@
 <div class="absences form">
+<p>Please use the following form to create an absence. For more information, please see help. Blah blah, more instructional text to come later.</p>
 <?php echo $this->Form->create('Absence');?>
 	<fieldset>
 		<legend><?php echo __('Add Absence'); ?></legend>

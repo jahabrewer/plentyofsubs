@@ -1,6 +1,24 @@
 @charset "UTF-8";
 /* PlentyOfSubs Page Layers CSS
 	Jianzhuo Wu, March 2012 */
+
+#fullContent {
+	float:right;
+	width:776px;
+	margin:0;
+}
+
+#leftContent {
+	float:left;
+	width:466px;
+	margin:0 24px 0 180px;
+}
+
+#rightContent {
+	float:right;
+	width:286px;
+	margin:0;
+}
 	
 /* --- DASHBOARD PAGE --- */
 #dashboardNewsList {
@@ -41,3 +59,5 @@
 #dashboardAbsenceList table, #dashboardApplicantsList table {
 	border:1px #000 solid;
 }
+
+/* --- CREATE ABSENCE PAGE --- */

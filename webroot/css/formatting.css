@@ -2,6 +2,8 @@
 /* PlentyOfSubs Formatting CSS
 	Jianzhuo Wu, March 2012 */
 	
+/* --- COMMON ELEMENTS --- */
+
 body {
 	background:#eeeeee url(../img/layout/bg.png) repeat;
 	font-family:"Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
@@ -30,6 +32,15 @@ a img {
 img {
 	margin:0;
 	padding:0;
+}
+
+fieldset {
+	border:#ffffff 2px groove;
+}
+
+fieldset > legend {
+	font-variant:small-caps;
+	letter-spacing:0.1em;
 }
 
 h1 {
@@ -98,10 +109,34 @@ a.submitButton:active, a.resetButton:active {
 	color:#000000;
 }
 
+/* --- TABLES AND FORMS --- */
+
+fieldset {
+	border:#ffffff 2px groove;
+}
+
+fieldset > legend {
+	font-variant:small-caps;
+	letter-spacing:0.2em;
+}
+
+input, textarea {
+	border:#999 1px solid;
+	border-radius:4px;
+	background:#ffffff;
+}
+
+input:hover, textarea:hover {
+	border:#000 1px solid;
+	background:#AACCFF;
+	
+}
+
 table {
 	width:100%;
 	font-size:0.825em;
 	border-collapse:collapse;
+	border:#000000 1px solid;
 }
 
 th {
