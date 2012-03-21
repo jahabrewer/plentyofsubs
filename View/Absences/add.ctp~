@@ -34,5 +34,5 @@
 		<li><?php echo $this->Html->link(__('New Notification'), array('controller' => 'notifications', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
-
+-->
 </div>

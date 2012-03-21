@@ -20,7 +20,7 @@
 	margin:0;
 }
 
-#fullContent h1:first-child, #leftContent h1:first-child, #rightContent h1:first-child {
+#fullContent h1:first-child {
 	margin:1.25em 0 0 0;
 }
 	
