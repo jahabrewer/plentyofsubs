@@ -21,7 +21,7 @@ class AbsencesController extends AppController {
 		if ($this->action === 'dashboard') return true;
 
 		if (isset($user['role'])) {
-			$absence_id = $this->request->params['pass'][0];
+			$absence_id =& $this->request->params['pass'][0];
 			if ($user['role'] === 'teacher') {
 				// teachers may always create
 				if ($this->action === 'add') return true;
