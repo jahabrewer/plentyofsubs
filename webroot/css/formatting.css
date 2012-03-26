@@ -109,10 +109,16 @@ a.submitButton:active, a.resetButton:active {
 	color:#000000;
 }
 
+hr {
+	color:#808080;
+	margin:1em 0;
+	border:1px #808080 dashed;
+}
+
 /* --- TABLES AND FORMS --- */
 
-.form {
-	margin:0;
+form {
+	margin:0 0 1em;;
 	padding:0;
 }
 
@@ -163,6 +169,19 @@ input:hover, textarea:hover {
 
 input:focus, textarea:focus {
 	background:#ffffff;
+}
+
+dl {
+	letter-spacing:0.1em;	
+}
+
+dt {
+	color:#007799;
+	font-weight:bold;
+}
+
+dd {
+	
 }
 
 table {

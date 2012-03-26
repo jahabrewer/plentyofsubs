@@ -64,4 +64,8 @@
 	border:1px #000 solid;
 }
 
-/* --- CREATE ABSENCE PAGE --- */
+/* --- ABSENCE PAGE --- */
+
+.absences index {
+	margin:10em;
+}

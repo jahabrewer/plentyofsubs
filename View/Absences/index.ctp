@@ -1,19 +1,25 @@
+<?php echo $this->element('SideMenu'); ?>
+<h1><?php echo __('Absences');?></h1>
+<div id="fullContent">
 <div class="absences index">
-	<h2><?php echo __('Absences');?></h2>
 	<div>
 		<?php echo $this->Form->create('filter');?>
 			<fieldset>
 			<?php
 			echo $this->Form->radio('date_select', array('anytime', 'before', 'after'));
+			echo '<div style="float:left; width:8em;">Date:</div>';
 			echo $this->Form->dateTime('date', 'DMY', null, array('empty' => false));
 			echo '<br />';
+			echo '<div style="float:left; width:8em;">School:</div>';
 			echo $this->Form->select('schools', $schools, array('empty' => 'All Schools'));
 			echo '<br />';
+			echo '<div style="float:left; width:8em;">Teacher:</div>';
 			echo $this->Form->select('teachers', $teachers, array('empty' => 'All Teachers'));
 			?>
 			</fieldset>
 		<?php echo $this->Form->end(__('Apply Filter'));?>
 	</div>
+	<hr />
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 		<th><?php echo $this->Paginator->sort('id');?></th>
@@ -55,6 +61,7 @@
 	</tr>
 <?php endforeach; ?>
 	</table>
+	<hr />
 	<p>
 	<?php
 	echo $this->Paginator->counter(array(
@@ -64,9 +71,12 @@
 
 	<div class="paging">
 	<?php
+		echo '<div style="display:block; float:right;">';
 		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
+		echo '&nbsp;';
 		echo $this->Paginator->numbers(array('separator' => ''));
 		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
+		echo '</div>';
 	?>
 	</div>
 </div>
@@ -83,4 +93,5 @@
 		<li><?php echo $this->Html->link(__('List Notifications'), array('controller' => 'notifications', 'action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Notification'), array('controller' => 'notifications', 'action' => 'add')); ?> </li>
 	</ul>
+</div>
 </div>

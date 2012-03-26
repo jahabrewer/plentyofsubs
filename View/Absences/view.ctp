@@ -1,5 +1,7 @@
+<?php echo $this->element('SideMenu'); ?>
+<h1><?php  echo __('Absence');?></h1>
+<div id="fullContent">
 <div class="absences view">
-<h2><?php  echo __('Absence');?></h2>
 	<dl>
 		<dt><?php echo __('Id'); ?></dt>
 		<dd>
@@ -36,11 +38,6 @@
 			<?php echo h($absence['Absence']['end']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Comment'); ?></dt>
-		<dd>
-			<?php echo h($absence['Absence']['comment']); ?>
-			&nbsp;
-		</dd>
 		<dt><?php echo __('Created'); ?></dt>
 		<dd>
 			<?php echo h($absence['Absence']['created']); ?>
@@ -51,8 +48,15 @@
 			<?php echo h($absence['Absence']['modified']); ?>
 			&nbsp;
 		</dd>
+		<br />
+		<dt><?php echo __('Comment'); ?></dt>
+		<dd>
+			<?php echo h($absence['Absence']['comment']); ?>
+			&nbsp;
+		</dd>
 	</dl>
 </div>
+<hr />
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
@@ -143,4 +147,5 @@
 			<li><?php echo $this->Html->link(__('New Notification'), array('controller' => 'notifications', 'action' => 'add'));?> </li>
 		</ul>
 	</div>
+</div>
 </div>
