@@ -40,8 +40,8 @@
 		<td>
 			<?php echo $this->Html->link($absence['School']['name'], array('controller' => 'schools', 'action' => 'view', $absence['School']['id'])); ?>
 		</td>
-		<td><?php echo date('D, M j Y g:h a', strtotime($absence['Absence']['start'])); ?>&nbsp;</td>
-		<td><?php echo date('D, M j Y g:h a', strtotime($absence['Absence']['end'])); ?>&nbsp;</td>
+		<td><?php echo date('D, M j Y g:i a', strtotime($absence['Absence']['start'])); ?>&nbsp;</td>
+		<td><?php echo date('D, M j Y g:i a', strtotime($absence['Absence']['end'])); ?>&nbsp;</td>
 	</tr>
 <?php endforeach; ?>
 	</table>

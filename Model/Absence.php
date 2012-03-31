@@ -61,4 +61,14 @@ class Absence extends AppModel {
 		return $this->field('id', array('id' => $absence_id, 'fulfiller_id' => $user_id)) === $absence_id;
 	}
 
+	public function hasApplicationFrom($absence_id, $user_id) {
+		$application = $this->Application->find('first', array(
+			'conditions' => array(
+				'Application.user_id' => $user_id,
+				'Application.absence_id' => $absence_id
+			)
+		));
+		return !empty($application);
+	}
+
 }

@@ -1,5 +1,5 @@
 <?php
-App::uses('AppController', 'Controller');
+App::uses('AppController', 'Controller', 'Time');
 /**
  * Absences Controller
  *
@@ -25,7 +25,7 @@ class AbsencesController extends AppController {
 			if ($user['role'] === 'teacher') {
 				// teachers may always create
 				if ($this->action === 'add') return true;
-				
+
 				// check for ownership for RUD
 				if (in_array($this->action, array('view', 'edit', 'delete'))) return $this->Absence->isOwnedBy($absence_id, $user['id']);
 			} elseif ($user['role'] === 'substitute') {
@@ -173,7 +173,55 @@ class AbsencesController extends AppController {
 		if (!$this->Absence->exists()) {
 			throw new NotFoundException(__('Invalid absence'));
 		}
-		$this->set('absence', $this->Absence->read(null, $id));
+		$absence = $this->Absence->read(null, $id);
+
+		// figure out which actions to show
+		$show_apply = false;
+		$show_retract = false;
+		$show_approve = false;
+		$show_deny = false;
+		$show_edit = false;
+		$show_delete = false;
+
+		// show buttons only if the absence is in the future
+		if (strtotime($absence['Absence']['start']) > strtotime('now') && empty($absence['Absence']['fulfiller_id'])) {
+			switch ($this->Auth->user('role')) {
+			case 'substitute':
+				// if the sub has applied, show retract
+				// otherwise, show apply if the absence has no
+				// fulfiller
+				if ($this->Absence->hasApplicationFrom($id, $this->Auth->user('id'))) $show_retract = true;
+				else if (empty($absence['Absence']['fulfiller_id'])) $show_apply = true;
+				break;
+			case 'admin':
+				// if the absence is approved, allow deny and
+				// vice versa
+				if (isset($absence['Approval']['approved']) && $absence['Approval']['approved'] == 0) $show_approve = true;
+				else $show_deny = true;
+				// if there is no approval record, allow both
+				if (empty($absence['Approval']['id'])) $show_approve = $show_deny = true;
+				$show_edit = true;
+				$show_delete = true;
+				break;
+			case 'teacher':
+				$show_edit = true;
+				$show_delete = true;
+				break;
+			}
+		}
+
+		// set approval status string
+		$approval_status = 'unset';
+		if (empty($absence['Approval']['id'])) {
+			$approval_status = 'Unreviewed';
+		} else {
+			// find the approver
+			$approver = $this->Absence->Approval->Approver->findById($absence['Approval']['approver_id']);
+			if ($absence['Approval']['approved'] == 1) $approval_status = 'Approved';
+			else $approval_status = 'Denied';
+			$approval_status .= ' by ' . $approver['Approver']['username'] . ' on ' . date('M j, Y', strtotime($absence['Approval']['modified']));
+		}
+		$this->set(compact('absence', 'show_apply', 'show_retract', 'show_approve', 'show_deny', 'show_edit', 'show_delete', 'approval_status'));
 	}
 
 /**
@@ -227,7 +275,7 @@ public function add() {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Absence->save($this->request->data)) {
 				$this->Session->setFlash(__('The absence has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'view', $id));
 			} else {
 				$this->Session->setFlash(__('The absence could not be saved. Please, try again.'));
 			}
