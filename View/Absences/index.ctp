@@ -6,7 +6,7 @@
 		<?php echo $this->Form->create('filter');?>
 			<fieldset>
 			<?php
-			echo $this->Form->radio('date_select', array('anytime', 'before', 'after'));
+			echo $this->Form->radio('date_select', array('anytime', 'before', 'after'), array('default' => 'anytime'));
 			echo '<div style="float:left; width:8em;">Date:</div>';
 			echo $this->Form->dateTime('date', 'DMY', null, array('empty' => false));
 			echo '<br />';

@@ -46,7 +46,8 @@ class AbsencesController extends AppController {
  * @return void
  */
 	public function index() {
-		$conditions = array();
+		// only show absences in the future
+		$conditions = array('Absence.start > NOW()');
 		if ($this->request->is('post')) {
 			define('BEFORE', '1');
 			define('AFTER', '2');
@@ -66,11 +67,12 @@ class AbsencesController extends AppController {
 			if (isset($data['teachers']) && !empty($data['teachers'])) {
 				$conditions['Absence.absentee_id'] = $data['teachers'];
 			}
-
-			$this->paginate = array(
-				'conditions' => $conditions
-			);
 		}
+
+		$this->paginate = array(
+			'conditions' => $conditions
+		);
+
 		$this->Absence->recursive = 0;
 		$this->set('absences', $this->paginate());
 		$schools = $this->Absence->School->find('list');
