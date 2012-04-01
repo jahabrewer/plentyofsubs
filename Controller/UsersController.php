@@ -7,6 +7,23 @@ App::uses('AppController', 'Controller');
  */
 class UsersController extends AppController {
 
+/**
+ * Determines whether users are authorized for actions
+ *
+ * @param array $user Contains information about the logged in user
+ * @return boolean Whether the user is authorized for an action
+ */
+	public function isAuthorized($user) {
+		if (parent::isAuthorized($user)) {
+			return true;
+		}
+		
+		if ($this->action === 'view') return true;
+
+		$this->Session->setFlash('You are not authorized for that action');
+		return false;
+	}
+
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->allow('logout');
@@ -45,7 +62,13 @@ class UsersController extends AppController {
 		if (!$this->User->exists()) {
 			throw new NotFoundException(__('Invalid user'));
 		}
-		$this->set('user', $this->User->read(null, $id));
+		$user = $this->User->read(null, $id);
+		$role = $this->Auth->user('role');
+		// logic for show review could be better, but it would be
+		// expensive
+		$show_review = $role === 'teacher';
+		$show_edit = $show_delete = $role === 'admin';
+		$this->set(compact('user', 'show_review', 'show_edit', 'show_delete'));
 	}
 
 /**
