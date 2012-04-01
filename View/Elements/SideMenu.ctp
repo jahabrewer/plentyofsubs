@@ -1,5 +1,5 @@
 <div id="sidePanel">
-  <p><?php echo isset($legend) ? $legend : 'SET THE LEGEND!'; ?></p>
+  <p><?php echo isset($legend) ? $legend : 'dashboard'; ?></p>
   <ul id="sideNav">
     <?php
     echo $this->Html->link('<li>'.$this->Html->image('icons/create_absence.png').'Create Absence</li>', array('controller' => 'absences', 'action' => 'add'), array('escape' => false));

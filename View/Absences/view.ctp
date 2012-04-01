@@ -1,4 +1,4 @@
-<?php //echo $this->element('SideMenu'); ?>
+<?php echo $this->element('SideMenu-AbsenceDetail'); ?>
 <h1><?php  echo __('Absence');?></h1>
 <div id="fullContent">
 <div class="absences view">
@@ -63,7 +63,8 @@
 </div>
 <hr />
 </div>
-<div id="sidePanel">
+
+<div id="sidePanel" style="display:none;">
   <p><?php echo 'actions'; ?></p>
   <ul id="sideNav">
     <?php
@@ -76,3 +77,4 @@
     ?>
   </ul>
 </div>
+
