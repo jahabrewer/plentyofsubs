@@ -73,24 +73,24 @@
         <p>You have no upcoming absences</p>
       <?php else: ?>
         <p>Below is a list of your nearest absences. Click on an entry to view more information.</p>
-        <table>
-          <tr>
-            <th>Date</th>
-            <th>Start</th>
-            <th>Room</th>
-            <th>Class</th>
-            <th>Apps</th>
-          </tr>
+        <div class="table">
+          <div class="row">
+            <span class="cell">Date</span>
+            <span class="cell">Start</span>
+            <span class="cell">Room</span>
+            <span class="cell">Class</span>
+            <span class="cell">Apps</span>
+          </div>
           <?php foreach($absences as $absence): ?>
-            <tr>
-              <td><?php echo date('D, M j Y', strtotime($absence['Absence']['start'])); ?></td>
-              <td><?php echo date('g:i a', strtotime($absence['Absence']['start'])); ?></td>
-              <td><?php echo $absence['School']['abbreviation'] . ' ' . $absence['Absence']['room']; ?></td>
-              <td>Math</td>
-              <td><?php echo count($absence['Application']); ?></td>
-            </tr>
+            <a class="rowLink" href="#">
+              <span class="cell"><?php echo date('D, M j Y', strtotime($absence['Absence']['start'])); ?></span>
+              <span class="cell"><?php echo date('g:i a', strtotime($absence['Absence']['start'])); ?></span>
+              <span class="cell"><?php echo $absence['School']['abbreviation'] . ' ' . $absence['Absence']['room']; ?></span>
+              <span class="cell">Math</span>
+              <span class="cell"><?php echo count($absence['Application']); ?></span>
+            </a>
           <?php endforeach; ?>
-        </table>
+        </div>
       <?php endif; ?>
     </div>
   <?php endif; ?>
@@ -103,22 +103,22 @@
         <p>No one has applied for your current absences</p>
       <?php else: ?>
         <p>Below is a list of your most recent applicants. Click on an entry to view more information.</p>
-        <table>
-          <tr>
-            <th>Substitute</th>
-            <th>Absence</th>
-            <th>Review</th>
-            <th>City</th>
-          </tr>
+        <div class="table">
+          <div class="row">
+            <span class="cell">Substitute</span>
+            <span class="cell">Absence</span>
+            <span class="cell">Review</span>
+            <span class="cell">City</span>
+          </div>
           <?php foreach($applicants as $applicant): ?>
-            <tr>
-              <td><?php echo $applicant['User']['first_name'] . ' ' . $applicant['User']['last_name']; ?></td>
-              <td><?php echo date('M j g:i a', strtotime($applicant['Absence']['start'])); ?></td>
-              <td>A</td>
-              <td>Duluth</td>
-            </tr>
+            <a class="rowLink" href="#">
+              <span class="cell"><?php echo $applicant['User']['first_name'] . ' ' . $applicant['User']['last_name']; ?></span>
+              <span class="cell"><?php echo date('M j g:i a', strtotime($applicant['Absence']['start'])); ?></span>
+              <span class="cell">A</span>
+              <span class="cell">Duluth</span>
+            </a>
           <?php endforeach; ?>
-        </table>
+        </div>
       <?php endif; ?>
     </div>
   <?php endif; ?>

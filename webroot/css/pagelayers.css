@@ -5,18 +5,26 @@
 #fullContent {
 	float:right;
 	width:776px;
+	padding:0;
 	margin:0;
 }
 
 #leftContent {
 	float:left;
 	width:466px;
+	padding:0;
 	margin:0 24px 0 180px;
+}
+
+/* --- leftContent under a fullContent doesn't need the 180px push from left --- */
+#fullContent #leftContent {
+	margin:0 24px 0 0;
 }
 
 #rightContent {
 	float:right;
 	width:286px;
+	padding:0;
 	margin:0;
 }
 

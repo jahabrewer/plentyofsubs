@@ -8,21 +8,21 @@ body {
 	background:#eeeeee url(../img/layout/bg.png) repeat;
 	font-family:"Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
 	font-size:1em;
+	color:#000000;
 	margin:0;
 }
 
 a, a:visited {
 	color:#009977;
-	font-weight:bold;
 	text-decoration:none;
 }
 
 a:hover {
-	color:#007799;
+	color:#e14b4b;
 }
 
 a:active {
-	color:#e14b4b;
+	color:#808080;
 }
 
 a img {
@@ -32,15 +32,6 @@ a img {
 img {
 	margin:0;
 	padding:0;
-}
-
-fieldset {
-	border:#ffffff 2px groove;
-}
-
-fieldset > legend {
-	font-variant:small-caps;
-	letter-spacing:0.1em;
 }
 
 h1 {
@@ -75,7 +66,7 @@ h4 {
 	color:#000000;
 	font-size:1.25em;
 	font-weight:bold;
-	margin:0 0 0.25em 0;
+	margin:0 0 0.5em 0;
 }
 
 a.submitButton, a.resetButton {
@@ -110,18 +101,33 @@ a.submitButton:active, a.resetButton:active {
 }
 
 hr {
-	color:#808080;
 	margin:1em 0;
-	border:1px #808080 dashed;
+	border-top:1px #000000 dotted;
 }
 
-/* --- TABLES AND FORMS --- */
+/* --- FORMS --- */
 
 form {
-	margin:0 0 1em;;
+	margin:0;
 	padding:0;
 }
 
+fieldset {
+	padding:0.5em 1.25em 1em;
+	margin:0 0 1em;
+	border:#808080 1px solid;
+	border-radius:6px;
+}
+
+legend {
+	font-size:1.25em;
+	font-variant:small-caps;
+	letter-spacing:0.2em;
+	color:#007799;
+	padding:0 1.5em;
+	margin:0;
+}
+/* --- NOT NEEDED FOR NOW --- 
 .form fieldset {
 	border:#ffffff 2px groove;
 }
@@ -130,7 +136,7 @@ form {
 	font-variant:small-caps;
 	letter-spacing:0.2em;
 }
-
+*/
 .form label {
 	display:block;
 	float:left;
@@ -171,6 +177,8 @@ input:focus, textarea:focus {
 	background:#ffffff;
 }
 
+/* --- DEFINITION LISTS --- */
+
 dl {
 	letter-spacing:0.1em;	
 }
@@ -184,15 +192,68 @@ dd {
 	
 }
 
-table {
+/* --- TABLES --- */
+
+table, .table {
+	display:table;
 	width:100%;
 	font-size:0.825em;
 	border-collapse:collapse;
 	border:#000000 1px solid;
 }
 
+/* Table Header */
+.table > .row:first-child {
+	display:table-row;
+	height:2.25em;
+	text-align:left;
+	font-weight:bold;
+	border-bottom:#000000 1px solid;
+	background:url(../img/layout/table_header_bg.png) top repeat-x;
+}
+
+/* Use rowLink as a class in anchor (<a class="rowLink" href="w/e">) tags 
+	as rows instead if you want that row to be a link */
+.row, .rowLink {
+	display:table-row;
+	color:#000000;
+	font-weight:normal;
+}
+
+.cell a {
+	display:table-cell;
+}
+
+.cell {
+	display:table-cell;
+}
+/* Move first cells of each row to the right a bit */
+.row .cell:first-child, .rowLink .cell:first-child {
+	padding:0 0 0 7px;
+}
+
+.row:nth-child(odd), .rowLink:nth-child(odd) {
+	background:#dbf3ff;
+}
+
+.row:nth-child(even), .rowLink:nth-child(even) {
+	background:#ffffff;
+}
+
+.row:nth-child(n+2):hover, .rowLink:nth-child(n+2):hover {
+	background:#007799;
+	color:#ffffff;
+}
+
+
+/* --- Unused, use css divs as tables instead --- */
+tr > td:first-child, tr > th:first-child {
+	padding:0 0 0 8px;
+}
+
 th {
 	height:2.25em;
+	text-align:left;
 	font-weight:bold;
 	border-bottom:#000000 1px solid;
 }
