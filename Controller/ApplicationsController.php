@@ -45,9 +45,10 @@ class ApplicationsController extends AppController {
 		}
 
 		// give the sub the absence
-		$applicant_id = $this->Application->field('user_id');
-		$absence_id = $this->Application->field('absence_id');
-		$this->Application->Absence->read(null, $absence_id);
+		$application = $this->Application->findById($id);
+		$applicant_id = $application['Application']['user_id'];
+		$absence_id = $application['Application']['absence_id'];
+		$this->Application->Absence->id = $absence_id;
 		$this->Application->Absence->set('fulfiller_id', $applicant_id);
 		$this->Application->Absence->save();
 
@@ -77,8 +78,15 @@ class ApplicationsController extends AppController {
 			throw new NotFoundException(__('Invalid application'));
 		}
 
+		// get information for the notification
+		$application = $this->Application->findById($id);
+		$applicant_id = $application['Application']['user_id'];
+		$absence_id = $application['Application']['absence_id'];
+
 		if ($this->Application->delete($id)) {
 			$this->Session->setFlash('Application rejected');
+			// generate notification
+			$this->_create_notification('application_rejected', $absence_id, $applicant_id, $this->Auth->user('id'));
 		} else {
 			$this->Session->setFlash('The application could not be rejected');
 		}
