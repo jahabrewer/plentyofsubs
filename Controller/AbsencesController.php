@@ -215,19 +215,10 @@ class AbsencesController extends AppController {
 			}
 		}
 
-		// set approval status string
-		$approval_status = 'unset';
-		if (empty($absence['Approval']['id'])) {
-			$approval_status = 'Unreviewed';
-		} else {
+		// get approval info
+		if (!empty($absence['Approval']['id'])) {
 			// find the approver
-			$approver = $this->Absence->Approval->Approver->findById($absence['Approval']['approver_id']);
-			if ($absence['Approval']['approved'] == 1) $approval_status = 'Approved';
-			else $approval_status = 'Denied';
-			$approval_status .= ' by '
-				. $approver['Approver']['username']
-				. ' on '
-				. date('M j, Y', strtotime($absence['Approval']['modified']));
+			$this->set('approver', $this->Absence->Approval->Approver->findById($absence['Approval']['approver_id'], array('Approver.username', 'Approver.id')));
 		}
 
 		// get list of applicants

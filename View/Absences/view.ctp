@@ -47,7 +47,18 @@
 				</dd>
 				<dt><?php echo __('Administrative Status'); ?></dt>
 				<dd>
-					<?php echo $approval_status; ?>
+					<?php 
+						if (isset($approver)) {
+							if ($absence['Approval']['approved'] == 1)
+								echo 'Approved';
+							else
+								echo 'Denied';
+							echo " by {$approver['Approver']['username']} on ";
+							echo date('M j, Y', strtotime($absence['Approval']['modified']));
+						} else {
+							echo 'Unreviewed';
+						}
+					?>
 					&nbsp;
 				</dd>
 				<dt><?php echo __('Created'); ?></dt>
@@ -75,27 +86,33 @@
 		<hr />
 		<div class="applicantsList">
 			<h4>Applicants</h4>
-			<!-- Use div class="table" instead of table tags -->
-			<div class="table">
-				<!-- Use div class="row" instead of tr -->
-				<div class="row">
-					<!-- Use span class="cell" instead of td or th -->
-					<span class="cell">Fulfiller</span>
-					<span class="cell">Phone</span>
-					<span class="cell">Email</span>
-					<span class="cell">&nbsp;</span>
-					<span class="cell">&nbsp;</span>
-				</div>
-				<?php foreach ($applications as $application): ?>
-					<div class="rowLink">
-						<span class="cell"><?php echo $application['User']['first_name'] . ' ' . $application['User']['last_name'] . ' (' . $application['User']['username'] . ')'; ?></span>
-						<span class="cell"><?php echo $application['User']['primary_phone']; ?></span>
-						<span class="cell"><?php echo $application['User']['email_address']; ?></span>
-						<span class="cell"><?php echo $this->Html->link('View Sub Details', array('controller' => 'users', 'action' => 'view', $application['User']['id'])); ?></span>
-						<span class="cell"><?php echo $this->Html->link('Accept Application', array('controller' => 'applications', 'action' => 'accept', $application['Application']['id'])); ?></span>
+			<?php if (empty($applications)): ?>
+				<p>There are no applicants for this absence at this time.</p>
+			<?php else: ?>
+				<!-- Use div class="table" instead of table tags -->
+				<div class="table">
+					<!-- Use div class="row" instead of tr -->
+					<div class="row">
+						<!-- Use span class="cell" instead of td or th -->
+						<span class="cell">Fulfiller</span>
+						<span class="cell">Phone</span>
+						<span class="cell">Email</span>
+						<span class="cell">&nbsp;</span>
+						<span class="cell">&nbsp;</span>
+						<span class="cell">&nbsp;</span>
 					</div>
-				<?php endforeach; ?>
-			</div>
+					<?php foreach ($applications as $application): ?>
+						<div class="rowLink">
+							<span class="cell"><?php echo $application['User']['first_name'] . ' ' . $application['User']['last_name'] . ' (' . $application['User']['username'] . ')'; ?></span>
+							<span class="cell"><?php echo $application['User']['primary_phone']; ?></span>
+							<span class="cell"><?php echo $application['User']['email_address']; ?></span>
+							<span class="cell"><?php echo $this->Html->link('View Sub Details', array('controller' => 'users', 'action' => 'view', $application['User']['id'])); ?></span>
+							<span class="cell"><?php echo $this->Html->link('Accept Application', array('controller' => 'applications', 'action' => 'accept', $application['Application']['id'])); ?></span>
+							<span class="cell"><?php echo $this->Html->link('Reject Application', array('controller' => 'applications', 'action' => 'reject', $application['Application']['id'])); ?></span>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
 		</div>
 	<?php endif; ?>
 </div>
