@@ -78,7 +78,7 @@
 	<dl>
 		<dt><?php echo __('Comment'); ?></dt>
 		<dd>
-			<?php echo h($absence['Absence']['comment']); ?>
+			<?php echo nl2br(h($absence['Absence']['comment'])); ?>
 		</dd>
 	</dl>
 
