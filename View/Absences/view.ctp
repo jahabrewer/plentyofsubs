@@ -99,16 +99,16 @@
 						<span class="cell">Email</span>
 						<span class="cell">&nbsp;</span>
 						<span class="cell">&nbsp;</span>
-						<span class="cell">&nbsp;</span>
+						<?php if ($show_reject): ?><span class="cell">&nbsp;</span><?php endif; ?>
 					</div>
 					<?php foreach ($applications as $application): ?>
 						<div class="rowLink">
-							<span class="cell"><?php echo $application['User']['first_name'] . ' ' . $application['User']['last_name'] . ' (' . $application['User']['username'] . ')'; ?></span>
+							<span class="cell"><?php echo "{$application['User']['first_name']} {$application['User']['last_name']} ({$application['User']['username']})"; ?></span>
 							<span class="cell"><?php echo $application['User']['primary_phone']; ?></span>
 							<span class="cell"><?php echo $application['User']['email_address']; ?></span>
 							<span class="cell"><?php echo $this->Html->link('View Sub Details', array('controller' => 'users', 'action' => 'view', $application['User']['id'])); ?></span>
 							<span class="cell"><?php echo $this->Html->link('Accept Application', array('controller' => 'applications', 'action' => 'accept', $application['Application']['id'])); ?></span>
-							<span class="cell"><?php echo $this->Html->link('Reject Application', array('controller' => 'applications', 'action' => 'reject', $application['Application']['id'])); ?></span>
+							<?php if ($show_reject): ?><span class="cell"><?php echo $this->Html->link('Reject Application', array('controller' => 'applications', 'action' => 'reject', $application['Application']['id'])); ?></span><?php endif; ?>
 						</div>
 					<?php endforeach; ?>
 				</div>

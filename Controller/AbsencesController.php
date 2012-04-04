@@ -185,6 +185,7 @@ class AbsencesController extends AppController {
 		$show_edit = false;
 		$show_delete = false;
 		$show_applicants = false;
+		$show_reject = false;
 
 		// show buttons only if the absence is in the future
 		if (strtotime($absence['Absence']['start']) > strtotime('now')) {
@@ -210,7 +211,7 @@ class AbsencesController extends AppController {
 			case 'teacher':
 				$show_edit = true;
 				$show_delete = true;
-				$show_applicants = $this->Absence->isOwnedBy($id, $this->Auth->user('id')) && empty($absence['Absence']['fulfiller_id']);
+				$show_applicants = $show_reject = $this->Absence->isOwnedBy($id, $this->Auth->user('id')) && empty($absence['Absence']['fulfiller_id']);
 				break;
 			}
 		}
@@ -224,7 +225,7 @@ class AbsencesController extends AppController {
 		// get list of applicants
 		$applications = $this->Absence->Application->findAllByAbsenceId($id, array('Application.id', 'User.id', 'User.username', 'User.email_address', 'User.primary_phone', 'User.first_name', 'User.last_name'));
 
-		$this->set(compact('absence', 'show_apply', 'show_retract', 'show_approve', 'show_deny', 'show_edit', 'show_delete', 'approval_status', 'applications', 'show_applicants'));
+		$this->set(compact('absence', 'show_apply', 'show_retract', 'show_approve', 'show_deny', 'show_edit', 'show_delete', 'approval_status', 'applications', 'show_applicants', 'show_reject'));
 	}
 
 /**
