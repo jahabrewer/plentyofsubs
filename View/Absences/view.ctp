@@ -70,36 +70,34 @@
 			<?php echo h($absence['Absence']['comment']); ?>
 		</dd>
 	</dl>
-<hr />
-	<div class="applicantsList">
-		<h4>Applicants</h4>
-		<!-- Use div class="table" instead of table tags -->
-		<div class="table">
-			<!-- Use div class="row" instead of tr -->
-			<div class="row">
-				<!-- Use span class="cell" instead of td or th -->
-				<span class="cell">Fulfiller</span>
-				<span class="cell">Phone</span>
-				<span class="cell">Email</span>
-				<span class="cell">Comments</span>
+
+	<?php if ($show_applicants): ?>
+		<hr />
+		<div class="applicantsList">
+			<h4>Applicants</h4>
+			<!-- Use div class="table" instead of table tags -->
+			<div class="table">
+				<!-- Use div class="row" instead of tr -->
+				<div class="row">
+					<!-- Use span class="cell" instead of td or th -->
+					<span class="cell">Fulfiller</span>
+					<span class="cell">Phone</span>
+					<span class="cell">Email</span>
+					<span class="cell">&nbsp;</span>
+					<span class="cell">&nbsp;</span>
+				</div>
+				<?php foreach ($applications as $application): ?>
+					<div class="rowLink">
+						<span class="cell"><?php echo $application['User']['first_name'] . ' ' . $application['User']['last_name'] . ' (' . $application['User']['username'] . ')'; ?></span>
+						<span class="cell"><?php echo $application['User']['primary_phone']; ?></span>
+						<span class="cell"><?php echo $application['User']['email_address']; ?></span>
+						<span class="cell"><?php echo $this->Html->link('View Sub Details', array('controller' => 'users', 'action' => 'view', $application['User']['id'])); ?></span>
+						<span class="cell"><?php echo $this->Html->link('Accept Application', array('controller' => 'applications', 'action' => 'accept', $application['Application']['id'])); ?></span>
+					</div>
+				<?php endforeach; ?>
 			</div>
-			<!-- Use anchor tags to make entire row a link -->
-			<a class="rowLink" href="http://www.youtube.com/">
-				<span class="cell">Joe Awesome</span>
-				<span class="cell">123-456-7890</span>
-				<span class="cell">joeawesome@awesomesauce.net</span>
-				<span class="cell">I LOVE PEANUT BUTTER</span>
-			</a>
-			<a class="row">
-				<!-- Cell only links works like this -->
-				<span class="cell"><a href="http://www.google.com/">Joe Awesome</a></span>
-				<span class="cell">123-456-7890</span>
-				<span class="cell">joeawesome@awesomesauce.net</span>
-				<span class="cell">I LOVE PEANUT BUTTER</span>
-			</div>
-			
 		</div>
-	</div>
+	<?php endif; ?>
 </div>
 
 <!-- HIDDEN, POSSIBLY REMOVE LATER, MAY BE USEFUL NOW? -->

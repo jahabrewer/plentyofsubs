@@ -28,36 +28,21 @@
 			<span class="cell"><?php echo $this->Paginator->sort('start');?></span>
 			<span class="cell"><?php echo $this->Paginator->sort('end');?></span>
 		</div>
-	<?php foreach ($absences as $absence): ?>
-	<!-- Entire row as a link is as below -->
-		<a class="rowLink" href="www.google.com">
-			<!-- Having a link in a table cell when the row is a link itself doesn't work for some reason
-				From what I see online, you can't have a cell as a link when the row is already linking somewhere
-				maybe using javascript onlick would work but it's not a real anchor tag link
-				Check the test row below -->
-			<span class="cell">
-				<?php echo $this->Html->link($absence['Absentee']['username'], array('controller' => 'users', 'action' => 'view', $absence['Absentee']['id'])); ?>
-			</span>
-			<span class="cell">
-				<?php echo $this->Html->link($absence['Fulfiller']['username'], array('controller' => 'users', 'action' => 'view', $absence['Fulfiller']['id'])); ?>
-			</span>
-			<span class="cell">
-				<?php echo $this->Html->link($absence['School']['name'], array('controller' => 'schools', 'action' => 'view', $absence['School']['id'])); ?>
-			</span>
-			<span class="cell"><?php echo date('D, M j Y g:i a', strtotime($absence['Absence']['start'])); ?>&nbsp;</span>
-			<span class="cell"><?php echo date('D, M j Y g:i a', strtotime($absence['Absence']['end'])); ?>&nbsp;</span>
-		</a>
-<?php endforeach; ?>
-		<!-- this row works fine and is essentially the same, just without cakephp link 
-			We could either have no links inside the row, the user won't be able to click on a name or school for info
-			Or we can not use row links and just have a column with view link like before -->
-		<a class="rowLink" href="#">
-			<span class="cell">Tess</span>
-			<span class="cell"></span>
-			<span class="cell">John Smith High</span>
-			<span class="cell">Mon, Apr 9 2012 3:08 am</span>
-			<span class="cell">Mon, Apr 9 2012 3:08 am</span>
-		</a>
+		<?php foreach ($absences as $absence): ?>
+			<a class="rowLink" href="<?php echo $this->Html->url(array('controller' => 'absences', 'action' => 'view', $absence['Absence']['id'])); ?>">
+				<span class="cell">
+					<?php echo $absence['Absentee']['username']; ?>
+				</span>
+				<span class="cell">
+					<?php echo $absence['Fulfiller']['username']; ?>&nbsp;
+				</span>
+				<span class="cell">
+					<?php echo $absence['School']['name']; ?>
+				</span>
+				<span class="cell"><?php echo date('D, M j Y g:i a', strtotime($absence['Absence']['start'])); ?>&nbsp;</span>
+				<span class="cell"><?php echo date('D, M j Y g:i a', strtotime($absence['Absence']['end'])); ?>&nbsp;</span>
+			</a>
+		<?php endforeach; ?>
 	</div>
 	<hr />
 	<p>

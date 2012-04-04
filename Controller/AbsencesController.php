@@ -177,16 +177,17 @@ class AbsencesController extends AppController {
 		}
 		$absence = $this->Absence->read(null, $id);
 
-		// figure out which actions to show
+		// figure out which elements to show
 		$show_apply = false;
 		$show_retract = false;
 		$show_approve = false;
 		$show_deny = false;
 		$show_edit = false;
 		$show_delete = false;
+		$show_applicants = false;
 
 		// show buttons only if the absence is in the future
-		if (strtotime($absence['Absence']['start']) > strtotime('now') && empty($absence['Absence']['fulfiller_id'])) {
+		if (strtotime($absence['Absence']['start']) > strtotime('now')) {
 			switch ($this->Auth->user('role')) {
 			case 'substitute':
 				// if the sub has applied, show retract
@@ -204,10 +205,12 @@ class AbsencesController extends AppController {
 				if (empty($absence['Approval']['id'])) $show_approve = $show_deny = true;
 				$show_edit = true;
 				$show_delete = true;
+				$show_applicants = empty($absence['Absence']['fulfiller_id']);
 				break;
 			case 'teacher':
 				$show_edit = true;
 				$show_delete = true;
+				$show_applicants = $this->Absence->isOwnedBy($id, $this->Auth->user('id')) && empty($absence['Absence']['fulfiller_id']);
 				break;
 			}
 		}
@@ -221,9 +224,16 @@ class AbsencesController extends AppController {
 			$approver = $this->Absence->Approval->Approver->findById($absence['Approval']['approver_id']);
 			if ($absence['Approval']['approved'] == 1) $approval_status = 'Approved';
 			else $approval_status = 'Denied';
-			$approval_status .= ' by ' . $approver['Approver']['username'] . ' on ' . date('M j, Y', strtotime($absence['Approval']['modified']));
+			$approval_status .= ' by '
+				. $approver['Approver']['username']
+				. ' on '
+				. date('M j, Y', strtotime($absence['Approval']['modified']));
 		}
-		$this->set(compact('absence', 'show_apply', 'show_retract', 'show_approve', 'show_deny', 'show_edit', 'show_delete', 'approval_status'));
+
+		// get list of applicants
+		$applications = $this->Absence->Application->findAllByAbsenceId($id, array('Application.id', 'User.id', 'User.username', 'User.email_address', 'User.primary_phone', 'User.first_name', 'User.last_name'));
+
+		$this->set(compact('absence', 'show_apply', 'show_retract', 'show_approve', 'show_deny', 'show_edit', 'show_delete', 'approval_status', 'applications', 'show_applicants'));
 	}
 
 /**

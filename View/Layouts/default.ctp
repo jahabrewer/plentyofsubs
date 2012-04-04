@@ -46,9 +46,9 @@
 			<ul id="nav">
 			<!-- Put class="current" in the <a> tag corresponding to which page this is -->
 			  <li><?php echo $this->Html->link('Dashboard', array('controller' => 'absences', 'action' => 'dashboard'), array('class' => 'current')); ?></li>
-			  <li><a href="#">Absences</a>
+			  <li><a href="<?php echo $this->Html->url(array('controller' => 'absences', 'action' => 'index')); ?>">Absences</a>
 			    <ul>
-			      <li><?php echo $this->Html->link('Manage Absence', array('controller' => 'absences', 'action' => 'index')); ?></li>
+			      <li><?php echo $this->Html->link('Search Absences', array('controller' => 'absences', 'action' => 'index')); ?></li>
 			      <li><?php echo $this->Html->link('Create Absence', array('controller' => 'absences', 'action' => 'add')); ?></li>
 			      <li><a href="#">View Applicants</a></li>
 			    </ul>
