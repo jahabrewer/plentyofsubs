@@ -36,7 +36,36 @@ class User extends AppModel {
 				'message' => 'Please enter a valid role',
 				'allowEmpty' => false
 			)
-		)
+		),
+		'middle_initial' => array(
+			'rule' => array('maxLength', 1),
+			'message' => 'Middle initial must be no more than 1 character'
+		),
+		'primary_phone' => array(
+			'phone' => array(
+				'rule' => array('phone', null, 'us'),
+				'message' => 'Primary phone number must be a valid US phone number'
+			),
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'message' => 'A primary phone number is required'
+			)
+		),
+		'secondary_phone' => array(
+			'rule' => array('phone', null, 'us'),
+			'message' => 'Secondary phone number must be a valid US phone number',
+			'allowEmpty' => true
+		),
+		'email_address' => array(
+			'email' => array(
+				'rule' => 'email',
+				'message' => 'This is not a valid email address'
+			),
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'message' => 'An email address is required'
+			)
+		),
 	);
 
 /**

@@ -53,6 +53,30 @@ class Absence extends AppModel {
 		)
 	);
 
+/**
+ * Validation specifications
+ *
+ * @var array
+ */
+	public $validate = array(
+		'room' => array(
+			'rule' => array('maxLength', 16),
+			'message' => 'Room number must be specified and no more than 16 characters',
+			'allowEmpty' => false
+		),
+		'start' => array(
+			'rule' => 'dateSanityCheck',
+			'message' => 'The start date/time must be before the end date/time',
+		)
+	);
+
+	public function dateSanityCheck($check) {
+		if (isset($check['start']))
+			return $check['start'] < $this->data[$this->alias]['end'];
+		else
+			return $check['end'] > $this->data[$this->alias]['start'];
+	}
+
 	public function isOwnedBy($absence_id, $user_id) {
 		return $this->field('id', array('id' => $absence_id, 'absentee_id' => $user_id)) === $absence_id;
 	}
