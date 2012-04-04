@@ -24,15 +24,11 @@
 					<?php echo h($absence['Absence']['room']); ?>
 					&nbsp;
 				</dd>
-				<dt><?php echo __('Start'); ?></dt>
+				<dt><?php echo __('Date'); ?></dt>
 				<dd>
-					<?php echo date('D, M j Y g:i a', strtotime($absence['Absence']['start'])); ?>
-					&nbsp;
-				</dd>
-				<dt><?php echo __('End'); ?></dt>
-				<dd>
-					<?php echo date('D, M j Y g:i a', strtotime($absence['Absence']['end'])); ?>
-					&nbsp;
+					<?php echo date($start_date_format, strtotime($absence['Absence']['start'])); ?>
+					-
+					<?php echo date($end_date_format, strtotime($absence['Absence']['end'])); ?>
 				</dd>
 			</dl>
 		</div>

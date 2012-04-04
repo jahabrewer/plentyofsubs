@@ -223,10 +223,17 @@ class AbsencesController extends AppController {
 			$this->set('approver', $this->Absence->Approval->Approver->findById($absence['Approval']['approver_id'], array('Approver.username', 'Approver.id')));
 		}
 
+		// set up the date formats
+		$start_date_format = $end_date_format = 'D, M j Y g:i a';
+		$same_day = date('dmY', strtotime($absence['Absence']['start'])) === date('dmY', strtotime($absence['Absence']['end']));
+		if ($same_day) {
+			$end_date_format = 'g:i a';
+		}
+
 		// get list of applicants
 		$applications = $this->Absence->Application->findAllByAbsenceId($id, array('Application.id', 'User.id', 'User.username', 'User.email_address', 'User.primary_phone', 'User.first_name', 'User.last_name'));
 
-		$this->set(compact('absence', 'show_apply', 'show_retract', 'show_approve', 'show_deny', 'show_edit', 'show_delete', 'approval_status', 'applications', 'show_applicants', 'show_reject'));
+		$this->set(compact('absence', 'show_apply', 'show_retract', 'show_approve', 'show_deny', 'show_edit', 'show_delete', 'approval_status', 'applications', 'show_applicants', 'show_reject', 'start_date_format', 'end_date_format'));
 	}
 
 /**
