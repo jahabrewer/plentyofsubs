@@ -6,6 +6,7 @@ App::uses('AppController', 'Controller', 'Time');
  * @property Absence $Absence
  */
 class AbsencesController extends AppController {
+	public $helpers = array('Notification');
 	
 /**
  * Determines whether users are authorized for actions
@@ -436,7 +437,7 @@ public function add() {
 				'conditions' => array(
 					'Absence.absentee_id' => $user_id
 				),
-				'fields' => array('User.first_name', 'User.last_name', 'Absence.start'),
+				'fields' => array('User.id', 'User.average_rating', 'User.reviewer_count', 'User.first_name', 'User.last_name', 'Absence.start'),
 				'group' => 'User.username',
 				'limit' => 5,
 				'order' => 'Application.id DESC'
@@ -447,7 +448,7 @@ public function add() {
 		// retrieve notifications
 		$notifications = $this->Absence->Notification->find('all', array(
 			'conditions' => array('Notification.user_id' => $user_id),
-			'fields' => array('Other.first_name', 'Other.last_name', 'Notification.notification_type', 'Notification.created', 'Absence.start'),
+			'fields' => array('Other.first_name', 'Other.last_name', 'Notification.notification_type', 'Notification.created', 'Absence.start', 'Absence.id'),
 			'limit' => 5,
 			'order' => 'Notification.created DESC'
 		));
