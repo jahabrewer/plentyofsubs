@@ -287,7 +287,7 @@ public function add() {
 			$this->request->data = $this->Absence->read(null, $id);
 		}
 		$absentees = $this->Absence->Absentee->find('list');
-		$fulfillers = $this->Absence->Fulfiller->find('list');
+		$fulfillers = $this->Absence->Fulfiller->find('list', array('conditions' => array('Fulfiller.role' => 'substitute')));
 		$schools = $this->Absence->School->find('list');
 		$this->set(compact('absentees', 'fulfillers', 'schools'));
 	}
