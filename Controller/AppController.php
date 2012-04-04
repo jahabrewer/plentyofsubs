@@ -48,8 +48,8 @@ class AppController extends Controller {
  * @return boolean Whether the user is authorized for an action
  */
 	public function isAuthorized($user) {
-		// allow admins everywhere but sub-specific actions
-		if (isset($user['role']) && $user['role'] === 'admin' && !in_array($this->action, array('apply', 'retract'))) {
+		// allow admins everywhere but teacher/sub-specific actions
+		if (isset($user['role']) && $user['role'] === 'admin' && !in_array($this->action, array('my', 'apply', 'retract'))) {
 			return true;
 		}
 		return false;

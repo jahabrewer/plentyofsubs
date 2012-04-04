@@ -25,12 +25,12 @@ class AbsencesController extends AppController {
 			$absence_id =& $this->request->params['pass'][0];
 			if ($user['role'] === 'teacher') {
 				// teachers may always create
-				if ($this->action === 'add') return true;
+				if (in_array($this->action, array('add', 'my'))) return true;
 
 				// check for ownership for RUD
 				if (in_array($this->action, array('view', 'edit', 'delete'))) return $this->Absence->isOwnedBy($absence_id, $user['id']);
 			} elseif ($user['role'] === 'substitute') {
-				if (in_array($this->action, array('view', 'index', 'apply', 'retract'))) return true;
+				if (in_array($this->action, array('my', 'view', 'index', 'apply', 'retract'))) return true;
 
 				// check fulfiller ownership for renege
 				if ($this->action == 'renege') return $this->Absence->isFulfilledBy($absence_id, $user['id']);
@@ -78,7 +78,33 @@ class AbsencesController extends AppController {
 		$this->set('absences', $this->paginate());
 		$schools = $this->Absence->School->find('list');
 		$teachers = $this->Absence->Absentee->find('list', array('conditions' => array('Absentee.role' => 'teacher')));
-		$this->set(compact('conditions', 'schools', 'teachers'));
+		$show_filters = true;
+		$page_legend = 'Search Absences';
+		$this->set(compact('schools', 'teachers', 'show_filters', 'filter', 'page_legend'));
+	}
+
+	public function my() {
+		$user_is_teacher = $this->Auth->user('role') === 'teacher';
+		$user_is_sub = $this->Auth->user('role') === 'substitute';
+
+		if ($user_is_teacher) {
+			$conditions = array(
+				'Absence.absentee_id' => $this->Auth->user('id'),
+			);
+		} elseif ($user_is_sub) {
+			$conditions = array(
+				'Absence.fulfiller_id' => $this->Auth->user('id'),
+			);
+		}
+
+		$this->paginate = array(
+			'conditions' => $conditions,
+			'order' => 'Absence.start DESC'
+		);
+		$this->set('absences', $this->paginate());
+		$this->set('show_filters', false);
+		$this->set('page_legend', 'My Absences');
+		$this->render('index');
 	}
 
 /**

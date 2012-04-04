@@ -1,25 +1,27 @@
 <?php echo $this->element('SideMenu'); ?>
-<h1><?php echo __('Absences');?></h1>
+<h1><?php echo __($page_legend);?></h1>
 <div id="fullContent">
 <div class="absences index">
-	<div>
-		<?php echo $this->Form->create('filter');?>
-			<fieldset>
-			<?php
-			echo $this->Form->radio('date_select', array('anytime', 'before', 'after'), array('default' => 'anytime'));
-			echo '<div style="float:left; width:8em;">Date:</div>';
-			echo $this->Form->dateTime('date', 'DMY', null, array('empty' => false));
-			echo '<br />';
-			echo '<div style="float:left; width:8em;">School:</div>';
-			echo $this->Form->select('schools', $schools, array('empty' => 'All Schools'));
-			echo '<br />';
-			echo '<div style="float:left; width:8em;">Teacher:</div>';
-			echo $this->Form->select('teachers', $teachers, array('empty' => 'All Teachers'));
-			?>
-			</fieldset>
-		<?php echo $this->Form->end(__('Apply Filter'));?>
-	</div>
-	<hr />
+	<?php if ($show_filters): ?>
+		<div>
+			<?php echo $this->Form->create('filter');?>
+				<fieldset>
+				<?php
+				echo $this->Form->radio('date_select', array('anytime', 'before', 'after'), array('default' => 'anytime'));
+				echo '<div style="float:left; width:8em;">Date:</div>';
+				echo $this->Form->dateTime('date', 'DMY', null, array('empty' => false));
+				echo '<br />';
+				echo '<div style="float:left; width:8em;">School:</div>';
+				echo $this->Form->select('schools', $schools, array('empty' => 'All Schools'));
+				echo '<br />';
+				echo '<div style="float:left; width:8em;">Teacher:</div>';
+				echo $this->Form->select('teachers', $teachers, array('empty' => 'All Teachers'));
+				?>
+				</fieldset>
+			<?php echo $this->Form->end(__('Apply Filter'));?>
+		</div>
+		<hr />
+	<?php endif; ?>
 	<div class="table">
 		<div class="row">
 			<span class="cell"><?php echo $this->Paginator->sort('absentee_id');?></span>
