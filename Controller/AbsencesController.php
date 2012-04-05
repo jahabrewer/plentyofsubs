@@ -45,7 +45,7 @@ class AbsencesController extends AppController {
 			}
 		}
 
-		$this->Session->setFlash('You are not authorized for that action');
+		$this->Session->setFlash('You are not authorized for that action', 'error');
 		return false;
 	}
 
@@ -105,7 +105,7 @@ class AbsencesController extends AppController {
 		// verify that the admin belongs to a school
 		$school_id = $this->Auth->user('school_id');
 		if (empty($school_id)) {
-			$this->Session->setFlash('You belong to no school');
+			$this->Session->setFlash('You belong to no school', 'error');
 		}
 
 		$this->paginate = array(
@@ -172,13 +172,13 @@ class AbsencesController extends AppController {
 		);
 		$this->Absence->Application->create();
 		if ($this->Absence->Application->save($data)) {
-			$this->Session->setFlash(__('Your application was successful'));
+			$this->Session->setFlash(__('Your application was successful'), 'success');
 
 			// create notification
 			$absentee_id = $this->Absence->field('absentee_id');
 			$this->_create_notification('application_created', $id, $absentee_id, $this->Auth->user('id'));
 		} else {
-			$this->Session->setFlash(__('Your application failed'));
+			$this->Session->setFlash(__('Your application failed'), 'error');
 		}
 		$this->redirect($this->referer());
 	}
@@ -201,13 +201,13 @@ class AbsencesController extends AppController {
 		);
 
 		if ($this->Absence->Application->deleteAll($conditions)) {
-			$this->Session->setFlash('Application retracted');
+			$this->Session->setFlash('Application retracted', 'success');
 
 			// create notification
 			$absentee_id = $this->Absence->field('absentee_id');
 			$this->_create_notification('application_retracted', $id, $absentee_id, $this->Auth->user('id'));
 		} else {
-			$this->Session->setFlash('Application could not be retracted');
+			$this->Session->setFlash('Application could not be retracted', 'error');
 		}
 		$this->redirect($this->referer());
 	}
@@ -226,13 +226,13 @@ class AbsencesController extends AppController {
 		}
 
 		if ($this->Absence->saveField('fulfiller_id', null)) {
-			$this->Session->setFlash('You successfully reneged on the absence');
+			$this->Session->setFlash('You successfully reneged on the absence', 'success');
 
 			// create notification
 			$absentee_id = $this->Absence->field('absentee_id');
 			$this->_create_notification('fulfiller_reneged', $id, $absentee_id, $this->Auth->user('id'));
 		} else {
-			$this->Session->setFlash('You could not renege on this absence');
+			$this->Session->setFlash('You could not renege on this absence', 'error');
 		}
 
 		$this->redirect($this->referer());
@@ -314,11 +314,11 @@ public function add() {
 		if ($this->request->is('post')) {
 			$this->Absence->create();
 			if ($this->Absence->save($this->request->data)) {
-				$this->Session->setFlash(__('The absence has been saved'));
+				$this->Session->setFlash(__('The absence has been saved'), 'success');
 				$absence_id = $this->Absence->getLastInsertId();
 				$this->redirect(array('action' => 'view', $absence_id));
 			} else {
-				$this->Session->setFlash(__('The absence could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The absence could not be saved. Please, try again.'), 'error');
 			}
 		}
 		$absentees = $this->Absence->Absentee->find(
@@ -355,10 +355,10 @@ public function add() {
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Absence->save($this->request->data)) {
-				$this->Session->setFlash(__('The absence has been saved'));
+				$this->Session->setFlash(__('The absence has been saved'), 'success');
 				$this->redirect(array('action' => 'view', $id));
 			} else {
-				$this->Session->setFlash(__('The absence could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The absence could not be saved. Please, try again.'), 'error');
 			}
 		} else {
 			$this->request->data = $this->Absence->read(null, $id);
@@ -384,10 +384,10 @@ public function add() {
 			throw new NotFoundException(__('Invalid absence'));
 		}
 		if ($this->Absence->delete()) {
-			$this->Session->setFlash(__('Absence deleted'));
+			$this->Session->setFlash(__('Absence deleted'), 'success');
 			$this->redirect(array('action' => 'index'));
 		}
-		$this->Session->setFlash(__('Absence was not deleted'));
+		$this->Session->setFlash(__('Absence was not deleted'), 'error');
 		$this->redirect(array('action' => 'index'));
 	}
 
@@ -461,7 +461,7 @@ public function add() {
 			);
 
 			if ($this->Absence->Approval->save($data)) {
-				$this->Session->setFlash(__('Your ' . ($approve ? 'approval' : 'denial') . ' of this absence was successful'));
+				$this->Session->setFlash(__('Your ' . ($approve ? 'approval' : 'denial') . ' of this absence was successful'), 'success');
 
 				// update the absence with a reference if the
 				// approval is new
@@ -471,10 +471,10 @@ public function add() {
 				$absentee_id = $this->Absence->field('absentee_id');
 				$this->_create_notification($approve ? 'absence_approved' : 'absence_denied', $id, $absentee_id, $this->Auth->user('id'));
 			} else {
-				$this->Session->setFlash(__('Your approval failed'));
+				$this->Session->setFlash(__('Your approval failed'), 'error');
 			}
 		} else {
-			$this->Session->setFlash(__('No change was made to the existing approval of this absence'));
+			$this->Session->setFlash(__('No change was made to the existing approval of this absence'), 'warning');
 		}
 
 		$this->redirect(array('action' => 'view', $id));

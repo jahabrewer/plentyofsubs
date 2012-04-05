@@ -26,7 +26,7 @@ class ApplicationsController extends AppController {
 			return $this->Application->Absence->isOwnedBy($absence_id, $user['id']);
 		}
 
-		$this->Session->setFlash('You are not authorized for that action');
+		$this->Session->setFlash('You are not authorized for that action', 'error');
 		return false;
 	}
 
@@ -54,13 +54,13 @@ class ApplicationsController extends AppController {
 
 		// clear the other applications
 		if ($this->Application->deleteAll(array('Application.absence_id' => $absence_id))) {
-			$this->Session->setFlash('Application accepted');
-		} else {
-			$this->Session->setFlash('The application could not be accepted');
-		}
+			$this->Session->setFlash('Application accepted', 'success');
 
-		// generate notification
-		$this->_create_notification('application_accepted', $absence_id, $applicant_id, $this->Auth->user('id'));
+			// generate notification
+			$this->_create_notification('application_accepted', $absence_id, $applicant_id, $this->Auth->user('id'));
+		} else {
+			$this->Session->setFlash('The application could not be accepted', 'error');
+		}
 
 		$this->redirect($this->referer());
 	}
@@ -84,11 +84,11 @@ class ApplicationsController extends AppController {
 		$absence_id = $application['Application']['absence_id'];
 
 		if ($this->Application->delete($id)) {
-			$this->Session->setFlash('Application rejected');
+			$this->Session->setFlash('Application rejected', 'success');
 			// generate notification
 			$this->_create_notification('application_rejected', $absence_id, $applicant_id, $this->Auth->user('id'));
 		} else {
-			$this->Session->setFlash('The application could not be rejected');
+			$this->Session->setFlash('The application could not be rejected', 'error');
 		}
 
 		$this->redirect($this->referer());

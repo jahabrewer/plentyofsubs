@@ -22,7 +22,7 @@ class ReviewsController extends AppController {
 			return true;
 		}
 
-		$this->Session->setFlash('You are not authorized for that action');
+		$this->Session->setFlash('You are not authorized for that action', 'error');
 		return false;
 	}
 
@@ -66,7 +66,7 @@ class ReviewsController extends AppController {
 		// check that the subject is a substitute and no review exists
 		$subject = $this->Review->Subject->findById($id);
 		if ($subject['Subject']['role'] !== 'substitute') {
-			$this->Session->setFlash('Reviews may only be written for substitutes');
+			$this->Session->setFlash('Reviews may only be written for substitutes', 'error');
 			$this->redirect($this->referer());
 		}
 		$review = $this->Review->find('first', array(
@@ -76,7 +76,7 @@ class ReviewsController extends AppController {
 			)
 		));
 		if (!empty($review)) {
-			$this->Session->setFlash('You\'ve already written a review for this substitute. Please edit the original instead.');
+			$this->Session->setFlash('You\'ve already written a review for this substitute. Please edit the original instead.', 'warning');
 			$this->redirect(array('action' => 'edit', $review['Review']['id']));
 		}
 
@@ -89,23 +89,23 @@ class ReviewsController extends AppController {
 			)
 		));
 		if (empty($absence)) {
-			$this->Session->setFlash('You must have had an absence fulfilled by this substitute in order to write a review.');
+			$this->Session->setFlash('You must have had an absence fulfilled by this substitute in order to write a review.', 'error');
 			$this->redirect(array('controller' => 'users', 'action' => 'view', $id));
 		}
 
 		if ($this->request->is('post')) {
 			if ($this->request->data['Review']['subject_id'] !== $id) {
-				$this->Session->setFlash('Data validation error, ID mismatch');
+				$this->Session->setFlash('Data validation error, ID mismatch', 'error');
 				$this->redirect(array('controller' => 'users', 'action' => 'view', $id));
 			}
 			// set the author
 			$this->request->data['Review']['author_id'] = $this->Auth->user('id');
 			$this->Review->create();
 			if ($this->Review->save($this->request->data)) {
-				$this->Session->setFlash(__('The review has been saved'));
+				$this->Session->setFlash(__('The review has been saved'), 'success');
 				$this->redirect(array('controller' => 'users', 'action' => 'view', $id));
 			} else {
-				$this->Session->setFlash(__('The review could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The review could not be saved. Please, try again.'), 'error');
 			}
 		}
 
@@ -126,10 +126,10 @@ class ReviewsController extends AppController {
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Review->save($this->request->data)) {
-				$this->Session->setFlash(__('The review has been saved'));
+				$this->Session->setFlash(__('The review has been saved'), 'success');
 				$this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The review could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The review could not be saved. Please, try again.'), 'error');
 			}
 		} else {
 			$this->request->data = $this->Review->read(null, $id);
@@ -154,10 +154,10 @@ class ReviewsController extends AppController {
 			throw new NotFoundException(__('Invalid review'));
 		}
 		if ($this->Review->delete()) {
-			$this->Session->setFlash(__('Review deleted'));
+			$this->Session->setFlash(__('Review deleted'), 'success');
 			$this->redirect(array('action' => 'index'));
 		}
-		$this->Session->setFlash(__('Review was not deleted'));
+		$this->Session->setFlash(__('Review was not deleted'), 'error');
 		$this->redirect(array('action' => 'index'));
 	}
 }

@@ -34,7 +34,7 @@
 
 /* --- ERROR AND FLASH MESSAGES --- */
 
-.error-message, .message, .success {
+.error-message, .flash-error, .flash-success, .flash-warning {
 	font-size:1em;
 	font-weight:bold;
 }
@@ -46,7 +46,7 @@
 	margin-left:1em;
 }
 /* Flash Error Messages and Flash Success Messages */
-.message, .success {
+.flash-error, .flash-success, .flash-warning {
 	color:#ffffff;
 	text-align:center;
 	text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
@@ -56,7 +56,17 @@
 	border-radius:4px;
 }
 
-.message {
+.flash-warning {
+	background:#000088;
+	background-image:-webkit-gradient(linear, left top, left bottom, from(#6666cc), to(#000088));
+	background-image:-webkit-linear-gradient(top, #6666cc, #000088);
+	background-image:-moz-linear-gradient(top, #6666cc, #000088);
+	background-image:-ms-linear-gradient(top, #6666cc, #000088);
+	background-image:-o-linear-gradient(top, #6666cc, #000088);
+	background-image:linear-gradient(top, #6666cc, #000088);
+}
+
+.flash-error {
 	background:#880000;
 	background-image:-webkit-gradient(linear, left top, left bottom, from(#cc6666), to(#880000));
 	background-image:-webkit-linear-gradient(top, #cc6666, #880000);
@@ -66,7 +76,7 @@
 	background-image:linear-gradient(top, #cc6666, #880000);
 }
 
-.success {
+.flash-success {
 	background:#008800;
 	background-image:-webkit-gradient(linear, left top, left bottom, from(#66cc66), to(#008800));
 	background-image:-webkit-linear-gradient(top, #66cc66, #008800);
