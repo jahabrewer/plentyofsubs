@@ -111,21 +111,16 @@
 		</div>
 	<?php endif; ?>
 </div>
-
-<!-- no longer hidden. this list is particular to this page, so it makes
-     no sense to make it an element. much easier to make items context
-     sensitive this way, too. -janzen -->
 <div id="sidePanel">
 	<p>actions</p>
 	<ul id="sideNav">
 		<?php
-			if ($show_apply) echo $this->Html->link('<li>'.$this->Html->image('icons/apply_absence.png').'Apply'.'</li>', array('controller' => 'absences', 'action' => 'apply', $absence['Absence']['id']), array('escape' => false));
-			if ($show_retract) echo $this->Html->link('<li>'.$this->Html->image('icons/retract_application.png').'Retract Application'.'</li>', array('controller' => 'absences', 'action' => 'retract', $absence['Absence']['id']), array('escape' => false));
-			if ($show_approve) echo $this->Html->link('<li>'.$this->Html->image('icons/approve.png').'Approve'.'</li>', array('controller' => 'absences', 'action' => 'approval', $absence['Absence']['id']), array('escape' => false));
-			if ($show_deny) echo $this->Html->link('<li>'.$this->Html->image('icons/deny.png').'Deny'.'</li>', array('controller' => 'absences', 'action' => 'denial', $absence['Absence']['id']), array('escape' => false));
-			if ($show_edit) echo $this->Html->link('<li>'.$this->Html->image('icons/edit.png').'Edit'.'</li>', array('controller' => 'absences', 'action' => 'edit', $absence['Absence']['id']), array('escape' => false));
-			if ($show_delete) echo $this->Html->link('<li>'.$this->Html->image('icons/delete.png').'Delete'.'</li>', array('controller' => 'absences', 'action' => 'delete', $absence['Absence']['id']), array('escape' => false), 'Are you sure you want to delete this absence?');
+			if ($show_apply) echo $this->Html->link('<li>'.$this->Html->image('icons/apply_absence.png').'Apply</li>', array('controller' => 'absences', 'action' => 'apply', $absence['Absence']['id']), array('escape' => false));
+			if ($show_retract) echo $this->Html->link('<li>'.$this->Html->image('icons/retract_application.png').'Retract Application</li>', array('controller' => 'absences', 'action' => 'retract', $absence['Absence']['id']), array('escape' => false));
+			if ($show_approve) echo $this->Html->link('<li>'.$this->Html->image('icons/approve.png').'Approve</li>', array('controller' => 'absences', 'action' => 'approval', $absence['Absence']['id']), array('escape' => false));
+			if ($show_deny) echo $this->Html->link('<li>'.$this->Html->image('icons/deny.png').'Deny</li>', array('controller' => 'absences', 'action' => 'denial', $absence['Absence']['id']), array('escape' => false));
+			if ($show_edit) echo $this->Html->link('<li>'.$this->Html->image('icons/edit.png').'Edit</li>', array('controller' => 'absences', 'action' => 'edit', $absence['Absence']['id']), array('escape' => false));
+			if ($show_delete) echo $this->Html->link('<li>'.$this->Html->image('icons/delete.png').'Delete</li>', array('controller' => 'absences', 'action' => 'delete', $absence['Absence']['id']), array('escape' => false), 'Are you sure you want to delete this absence?');
 		?>
 	</ul>
 </div>
-

@@ -248,7 +248,7 @@ table, .table {
 
 /* --- Unused, use css divs as tables instead --- */
 tr > td:first-child, tr > th:first-child {
-	padding:0 0 0 8px;
+	padding:0 0 0 7px;
 }
 
 th {

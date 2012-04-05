@@ -31,6 +31,50 @@
 #fullContent h1:first-child, #leftContent h1:first-child, #rightContent h1:first-child {
 	margin:1.25em 0 0 0;
 }
+
+/* --- ERROR AND FLASH MESSAGES --- */
+
+.error-message, .message, .success {
+	font-size:1em;
+	font-weight:bold;
+}
+/* Form Error Messages */
+.error-message {
+	display:list-item;
+	color:#e14b4b;
+	list-style-type:square;
+	margin-left:1em;
+}
+/* Flash Error Messages and Flash Success Messages */
+.message, .success {
+	color:#ffffff;
+	text-align:center;
+	text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+	padding:0.25em 1.25em;
+	margin:0.5em 0 0 0;
+	border:1px #000000 solid;
+	border-radius:4px;
+}
+
+.message {
+	background:#880000;
+	background-image:-webkit-gradient(linear, left top, left bottom, from(#cc6666), to(#880000));
+	background-image:-webkit-linear-gradient(top, #cc6666, #880000);
+	background-image:-moz-linear-gradient(top, #cc6666, #880000);
+	background-image:-ms-linear-gradient(top, #cc6666, #880000);
+	background-image:-o-linear-gradient(top, #cc6666, #880000);
+	background-image:linear-gradient(top, #cc6666, #880000);
+}
+
+.success {
+	background:#008800;
+	background-image:-webkit-gradient(linear, left top, left bottom, from(#66cc66), to(#008800));
+	background-image:-webkit-linear-gradient(top, #66cc66, #008800);
+	background-image:-moz-linear-gradient(top, #66cc66, #008800);
+	background-image:-ms-linear-gradient(top, #66cc66, #008800);
+	background-image:-o-linear-gradient(top, #66cc66, #008800);
+	background-image:linear-gradient(top, #66cc66, #008800);
+}
 	
 /* --- DASHBOARD PAGE --- */
 #dashboardNewsList {
