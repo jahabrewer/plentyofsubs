@@ -26,6 +26,8 @@
 			<dt><?php echo __('Average Rating'); ?></dt>
 			<dd>
 				<?php echo sprintf('%.1f', $user['User']['average_rating']) . ' by ' . h($user['User']['reviewer_count']) . ' teachers'; ?>
+				<br />
+				<?php echo $this->Html->link('See reviews', array('controller' => 'reviews', 'action' => 'user', $user['User']['id'])); ?>
 				&nbsp;
 			</dd>
 		<?php endif; ?>

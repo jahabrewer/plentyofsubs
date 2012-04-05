@@ -160,4 +160,26 @@ class ReviewsController extends AppController {
 		$this->Session->setFlash(__('Review was not deleted'), 'error');
 		$this->redirect(array('action' => 'index'));
 	}
+
+	public function user($id = null) {
+		// retrieve subject/user only if sub
+		$subject = $this->Review->Subject->findById($id);
+
+		if (empty($subject)) {
+			$this->Session->setFlash('That user does not exist', 'error');
+			$this->redirect($this->referer());
+
+		} elseif (isset($subject['Subject']['role']) && $subject['Subject']['role'] !== 'substitute') {
+			$this->Session->setFlash('You may only view reviews for substitutes', 'error');
+			$this->redirect(array('controller' => 'users', 'action' => 'view', $id));
+		}
+
+		$this->paginate = array(
+			'conditions' => array(
+				'Subject.id' => $id,
+			),
+		);
+		$reviews = $this->paginate();
+		$this->set(compact('reviews', 'subject'));
+	}
 }
