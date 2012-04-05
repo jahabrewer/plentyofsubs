@@ -6,7 +6,15 @@ App::uses('AppController', 'Controller', 'Time');
  * @property Absence $Absence
  */
 class AbsencesController extends AppController {
-	public $helpers = array('Notification');
+
+/**
+ * Executed before any controller method is called
+ */
+	public function beforeFilter() {
+		parent::beforeFilter();
+		// this defaults the layout to show absences as the current tab
+		$this->set('layout_current', array('absences' => true));
+	}
 	
 /**
  * Determines whether users are authorized for actions
@@ -47,6 +55,9 @@ class AbsencesController extends AppController {
  * @return void
  */
 	public function index() {
+		// include absences helper for formatting date ranges
+		$this->helpers[] = 'Absence';
+
 		// only show absences in the future
 		$conditions = array('Absence.start > NOW()');
 		if ($this->request->is('post')) {
@@ -83,7 +94,43 @@ class AbsencesController extends AppController {
 		$this->set(compact('schools', 'teachers', 'show_filters', 'filter', 'page_legend'));
 	}
 
+/**
+ * Shows absences yet to be approved under the jurisdiction of the admin using
+ * the index view
+ */
+	public function pending() {
+		// include absences helper for formatting date ranges
+		$this->helpers[] = 'Absence';
+
+		// verify that the admin belongs to a school
+		$school_id = $this->Auth->user('school_id');
+		if (empty($school_id)) {
+			$this->Session->setFlash('You belong to no school');
+		}
+
+		$this->paginate = array(
+			'conditions' => array(
+				'Absence.school_id' => $school_id,
+				'Absence.approval_id' => null
+			)
+		);
+		$absences = $this->paginate();
+
+		$page_legend = 'Absences pending approval';
+		$show_filters = false;
+		$this->set(compact('absences', 'page_legend', 'show_filters'));
+		$this->set(compact('school_id'));
+		$this->render('index');
+	}
+
+/**
+ * Shows absences belonging to the user (as either a sub or absentee) using
+ * the index view
+ */
 	public function my() {
+		// include absences helper for formatting date ranges
+		$this->helpers[] = 'Absence';
+
 		$user_is_teacher = $this->Auth->user('role') === 'teacher';
 		$user_is_sub = $this->Auth->user('role') === 'substitute';
 
@@ -204,6 +251,9 @@ class AbsencesController extends AppController {
 		}
 		$absence = $this->Absence->read(null, $id);
 
+		// include the absence helper for date formatting
+		$this->helpers[] = 'Absence';
+
 		// figure out which elements to show
 		$show_apply = false;
 		$show_retract = false;
@@ -249,17 +299,10 @@ class AbsencesController extends AppController {
 			$this->set('approver', $this->Absence->Approval->Approver->findById($absence['Approval']['approver_id'], array('Approver.username', 'Approver.id')));
 		}
 
-		// set up the date formats
-		$start_date_format = $end_date_format = 'D, M j Y g:i a';
-		$same_day = date('dmY', strtotime($absence['Absence']['start'])) === date('dmY', strtotime($absence['Absence']['end']));
-		if ($same_day) {
-			$end_date_format = 'g:i a';
-		}
-
 		// get list of applicants
 		$applications = $this->Absence->Application->findAllByAbsenceId($id, array('Application.id', 'User.id', 'User.username', 'User.email_address', 'User.primary_phone', 'User.first_name', 'User.last_name'));
 
-		$this->set(compact('absence', 'show_apply', 'show_retract', 'show_approve', 'show_deny', 'show_edit', 'show_delete', 'approval_status', 'applications', 'show_applicants', 'show_reject', 'start_date_format', 'end_date_format'));
+		$this->set(compact('absence', 'show_apply', 'show_retract', 'show_approve', 'show_deny', 'show_edit', 'show_delete', 'approval_status', 'applications', 'show_applicants', 'show_reject'));
 	}
 
 /**
@@ -439,6 +482,9 @@ public function add() {
 
 	public function dashboard() {
 		$this->set('title_for_layout', 'Dashboard');
+		$this->set('layout_current', array('dashboard' => true));
+		$this->helpers[] = 'Notification';
+
 		$user_id = $this->Auth->user('id');
 		$user_role = $this->Auth->user('role');
 

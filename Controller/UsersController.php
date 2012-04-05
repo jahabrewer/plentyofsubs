@@ -113,11 +113,11 @@ class UsersController extends AppController {
 		} else {
 			$this->request->data = $this->User->read(null, $id);
 		}
-		$userTypes = $this->User->UserType->find('list');
+		$roles = array('admin' => 'Administrator', 'teacher' => 'Teacher', 'substitute' => 'Substitute');
 		$educationLevels = $this->User->EducationLevel->find('list');
 		$schools = $this->User->School->find('list');
 		$preferredSchools = $this->User->PreferredSchool->find('list');
-		$this->set(compact('userTypes', 'educationLevels', 'schools', 'preferredSchools'));
+		$this->set(compact('roles', 'educationLevels', 'schools', 'preferredSchools'));
 	}
 
 /**

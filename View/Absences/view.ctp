@@ -26,9 +26,7 @@
 				</dd>
 				<dt><?php echo __('Date'); ?></dt>
 				<dd>
-					<?php echo date($start_date_format, strtotime($absence['Absence']['start'])); ?>
-					-
-					<?php echo date($end_date_format, strtotime($absence['Absence']['end'])); ?>
+					<?php echo $this->Absence->formatDateRange($absence['Absence']['start'], $absence['Absence']['end']); ?>
 				</dd>
 			</dl>
 		</div>

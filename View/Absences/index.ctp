@@ -26,9 +26,8 @@
 		<div class="row">
 			<span class="cell"><?php echo $this->Paginator->sort('absentee_id');?></span>
 			<span class="cell"><?php echo $this->Paginator->sort('fulfiller_id');?></span>
-			<span class="cell"><?php echo $this->Paginator->sort('school_id');?></span>
-			<span class="cell"><?php echo $this->Paginator->sort('start');?></span>
-			<span class="cell"><?php echo $this->Paginator->sort('end');?></span>
+			<span class="cell"><?php echo $this->Paginator->sort('school_id', 'Location');?></span>
+			<span class="cell"><?php echo $this->Paginator->sort('start', 'Date');?></span>
 		</div>
 		<?php foreach ($absences as $absence): ?>
 			<a class="rowLink" href="<?php echo $this->Html->url(array('controller' => 'absences', 'action' => 'view', $absence['Absence']['id'])); ?>">
@@ -39,10 +38,9 @@
 					<?php echo $absence['Fulfiller']['username']; ?>&nbsp;
 				</span>
 				<span class="cell">
-					<?php echo $absence['School']['name']; ?>
+					<?php echo "{$absence['School']['name']} {$absence['Absence']['room']}"; ?>
 				</span>
-				<span class="cell"><?php echo date('D, M j Y g:i a', strtotime($absence['Absence']['start'])); ?>&nbsp;</span>
-				<span class="cell"><?php echo date('D, M j Y g:i a', strtotime($absence['Absence']['end'])); ?>&nbsp;</span>
+				<span class="cell"><?php echo $this->Absence->formatDateRange($absence['Absence']['start'], $absence['Absence']['end'], array('short' => true)); ?>&nbsp;</span>
 			</a>
 		<?php endforeach; ?>
 	</div>
@@ -50,7 +48,7 @@
 	<p>
 	<?php
 	echo $this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
+	'format' => __('Page {:page} of {:pages}, showing {:current} absences out of {:count} total')
 	));
 	?>	</p>
 

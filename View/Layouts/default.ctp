@@ -45,11 +45,12 @@
 			<div id="welcomeMessage">Welcome back, <span class="userName"><?php echo $logged_in_firstname; ?></span>!</div>
 			<ul id="nav">
 			<!-- Put class="current" in the <a> tag corresponding to which page this is -->
-			  <li><?php echo $this->Html->link('Dashboard', array('controller' => 'absences', 'action' => 'dashboard'), array('class' => 'current')); ?></li>
-			  <li><a href="#">Absences</a>
+			  <li><?php echo $this->Html->link('Dashboard', array('controller' => 'absences', 'action' => 'dashboard'), isset($layout_current['dashboard']) ? array('class' => 'current') : null); ?></li>
+			  <li><a<?php echo isset($layout_current['absences']) ? ' class="current"' : ''; ?>>Absences</a>
 			    <ul>
 			      <li><?php echo $this->Html->link('My Absences', array('controller' => 'absences', 'action' => 'my')); ?></li>
 			      <li><?php echo $this->Html->link('Search Absences', array('controller' => 'absences', 'action' => 'index')); ?></li>
+			      <li><?php echo $this->Html->link('Pending Absences', array('controller' => 'absences', 'action' => 'pending')); ?></li>
 			      <li><?php echo $this->Html->link('Create Absence', array('controller' => 'absences', 'action' => 'add')); ?></li>
 			    </ul>
 			  </li>
