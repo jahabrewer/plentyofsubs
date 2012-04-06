@@ -3,6 +3,27 @@
 
 <!-- BEGIN LEFT (MIDDLE) CONTENT COLUMN -->
 <div id="leftContent">
+	<?php if (isset($absences_today)): ?>
+	<div id="dashboardAdmin">
+		<h2>Today's Absences</h2>
+		<div class="table">
+			<div class="row">
+				<span class="cell">Absentee</span>
+				<span class="cell">Fulfiller</span>
+				<span class="cell">Location</span>
+				<span class="cell">Time</span>
+			</div>
+			<?php foreach ($absences_today as $absence): ?>
+				<a class="rowLink" href="<?php echo $this->Html->url(array('controller' => 'absences', 'action' => 'view', $absence['Absence']['id'])); ?>">
+					<span class="cell"><?php echo "{$absence['Absentee']['first_name']} {$absence['Absentee']['last_name']}"; ?></span>
+					<span class="cell"><?php echo "{$absence['Fulfiller']['first_name']} {$absence['Fulfiller']['last_name']}"; ?></span>
+					<span class="cell"><?php echo "{$absence['School']['abbreviation']} {$absence['Absence']['room']}"; ?></span>
+					<span class="cell"><?php echo date('g:i a', strtotime($absence['Absence']['start'])) . ' - ' . date('g:i a', strtotime($absence['Absence']['end'])); ?></span>
+				</a>
+			<?php endforeach; ?>
+		</div>
+	</div>
+	<?php endif; ?>
 
   <!-- NEWS -->
   <div id="dashboardNews">
@@ -40,7 +61,11 @@
 <div id="rightContent">
   <h2>Overview</h2>
   <p>Today is <span class="date"><?php echo date('l, F j, Y'); ?></span>.<br />
-    You have <span class="numAbsences"><?php echo $num_upcoming_absences > 0 ? $num_upcoming_absences : 'no'; ?></span> upcoming absence<?php echo $num_upcoming_absences == 1 ? '' : 's'; ?>. <br />
+    <?php if (isset($num_upcoming_absences)): ?>You have <span class="numAbsences"><?php echo $num_upcoming_absences > 0 ? $num_upcoming_absences : 'no'; ?></span> upcoming absence<?php echo $num_upcoming_absences == 1 ? '' : 's'; ?>. <br /><?php endif; ?>
+    <?php if (isset($num_pending_absences)): ?>
+      There <?php echo $num_pending_absences == 1 ? 'is' : 'are'; ?> <span class="numAbsences"><?php echo $num_pending_absences > 0 ? $num_pending_absences : 'no'; ?></span> absence<?php echo $num_pending_absences == 1 ? '' : 's'; ?> pending your approval.<br />
+      <?php if ($num_pending_absences > 0) echo $this->Html->link('See pending absences.', array('controller' => 'absences', 'action' => 'pending')); ?><br />
+    <?php endif; ?>
 
   <div id="dashboardNotificationList">
     <h4>Notifications</h4>

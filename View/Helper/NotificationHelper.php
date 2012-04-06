@@ -17,30 +17,29 @@ class NotificationHelper extends AppHelper {
 		$string = "{$notification['Other']['first_name']} {$notification['Other']['last_name']} ";
 		switch ($notification['Notification']['notification_type']) {
 		case 'application_created':
-			$string .= 'submitted an application to ';
+			$string .= 'submitted an application to your ';
 			break;
 		case 'application_accepted':
-			$string .= 'accepted your application to ';
+			$string .= 'accepted your application to their ';
 			break;
 		case 'application_rejected':
-			$string .= 'rejected your application to ';
+			$string .= 'rejected your application to their ';
 			break;
 		case 'application_retracted':
-			$string .= 'retracted their application to ';
+			$string .= 'retracted their application from your ';
 			break;
 		case 'fulfiller_reneged':
-			$string .= 'reneged on their intent to fulfill ';
+			$string .= 'reneged on their intent to fulfill your ';
 			break;
 		case 'absence_approved':
-			$string .= 'approved ';
+			$string .= 'approved your ';
 			break;
 		case 'absence_denied':
-			$string .= 'denied ';
+			$string .= 'denied your ';
 			break;
 		default:
 			$string .= 'FALLTHROUGH ON NOTIFICATION TYPE';
 		}
-		$string .= 'your ';
 		$string .= date('M j', strtotime($notification['Absence']['start']));
 		$string .= ' absence';
 		return $string;

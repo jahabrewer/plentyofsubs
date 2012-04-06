@@ -489,11 +489,10 @@ public function add() {
 		$user_role = $this->Auth->user('role');
 
 		// count upcoming absences (conditions depend on role)
-		$num_upcoming_absences = -1;
-		if ($user_role != 'admin') $num_upcoming_absences = $this->Absence->find('count', array('conditions' => array(
+		if ($user_role != 'admin') $this->set('num_upcoming_absences', $this->Absence->find('count', array('conditions' => array(
 			'Absence.' . ($user_role=='teacher' ? 'absentee_id' : 'fulfiller_id') => $user_id,
 			'start > NOW()'
-		)));
+		))));
 
 		// get a short list of upcoming absences
 		if ($user_role != 'admin') {
@@ -532,6 +531,25 @@ public function add() {
 			'order' => 'Notification.created DESC'
 		));
 
-		$this->set(compact('num_upcoming_absences', 'notifications'));
+		// get today's absences for admins and count pending absences
+		if ($user_role === 'admin') {
+			$user_school_id = $this->Auth->user('school_id');
+			$this->set('absences_today', $this->Absence->find('all', array(
+				'conditions' => array(
+					'Absence.school_id' => $user_school_id,
+					'Absence.start >=' => date('Y-m-d'),
+					'Absence.start <' => date('Y-m-d', strtotime('+1 day'))
+				)
+			)));
+			$this->set('num_pending_absences', $this->Absence->find('count', array(
+				'conditions' => array(
+					'Absence.approval_id' => null,
+					'Absence.start >= NOW()',
+					'Absence.school_id' => $user_school_id
+				),
+				'recursive' => -1
+			)));
+		}
+		$this->set(compact('notifications'));
 	}
 }
