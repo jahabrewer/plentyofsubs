@@ -69,8 +69,9 @@ class UsersController extends AppController {
 		// logic for show review could be better, but it would be
 		// expensive
 		$show_review = $role === 'teacher';
+		$show_rating = $role !== 'substitute';
 		$show_edit = $show_delete = $role === 'admin';
-		$this->set(compact('user', 'show_review', 'show_edit', 'show_delete'));
+		$this->set(compact('user', 'show_review', 'show_rating', 'show_edit', 'show_delete'));
 	}
 
 /**

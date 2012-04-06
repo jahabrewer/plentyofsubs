@@ -22,7 +22,7 @@
 			<?php echo h($user['User']['role']); ?>
 			&nbsp;
 		</dd>
-		<?php if ($user['User']['role'] === 'substitute'): ?>
+		<?php if ($show_rating && $user['User']['role'] === 'substitute'): ?>
 			<dt><?php echo __('Average Rating'); ?></dt>
 			<dd>
 				<?php echo sprintf('%.1f', $user['User']['average_rating']) . ' by ' . h($user['User']['reviewer_count']) . ' teachers'; ?>
