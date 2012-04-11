@@ -115,6 +115,7 @@
 		<?php
 			if ($show_apply) echo $this->Html->link('<li>'.$this->Html->image('icons/apply_absence.png').'Apply</li>', array('controller' => 'absences', 'action' => 'apply', $absence['Absence']['id']), array('escape' => false));
 			if ($show_retract) echo $this->Html->link('<li>'.$this->Html->image('icons/retract_application.png').'Retract Application</li>', array('controller' => 'absences', 'action' => 'retract', $absence['Absence']['id']), array('escape' => false));
+			if ($show_renege) echo $this->Html->link('<li>'.$this->Html->image('icons/help.png').'Renege</li>', array('controller' => 'absences', 'action' => 'renege', $absence['Absence']['id']), array('escape' => false));
 			if ($show_approve) echo $this->Html->link('<li>'.$this->Html->image('icons/approve.png').'Approve</li>', array('controller' => 'absences', 'action' => 'approval', $absence['Absence']['id']), array('escape' => false));
 			if ($show_deny) echo $this->Html->link('<li>'.$this->Html->image('icons/deny.png').'Deny</li>', array('controller' => 'absences', 'action' => 'denial', $absence['Absence']['id']), array('escape' => false));
 			if ($show_edit) echo $this->Html->link('<li>'.$this->Html->image('icons/edit.png').'Edit</li>', array('controller' => 'absences', 'action' => 'edit', $absence['Absence']['id']), array('escape' => false));

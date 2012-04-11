@@ -250,6 +250,7 @@ class AbsencesController extends AppController {
 			throw new NotFoundException(__('Invalid absence'));
 		}
 		$absence = $this->Absence->read(null, $id);
+		$viewer_id = $this->Auth->user('id');
 
 		// include the absence helper for date formatting
 		$this->helpers[] = 'Absence';
@@ -257,6 +258,7 @@ class AbsencesController extends AppController {
 		// figure out which elements to show
 		$show_apply = false;
 		$show_retract = false;
+		$show_renege = false;
 		$show_approve = false;
 		$show_deny = false;
 		$show_edit = false;
@@ -271,8 +273,10 @@ class AbsencesController extends AppController {
 				// if the sub has applied, show retract
 				// otherwise, show apply if the absence has no
 				// fulfiller
-				if ($this->Absence->hasApplicationFrom($id, $this->Auth->user('id'))) $show_retract = true;
+				if ($this->Absence->hasApplicationFrom($id, $viewer_id)) $show_retract = true;
 				else if (empty($absence['Absence']['fulfiller_id'])) $show_apply = true;
+
+				if ($absence['Absence']['fulfiller_id'] === $viewer_id) $show_renege = true;
 				break;
 			case 'admin':
 				// if the absence is approved, allow deny and
@@ -288,7 +292,7 @@ class AbsencesController extends AppController {
 			case 'teacher':
 				$show_edit = true;
 				$show_delete = true;
-				$show_applicants = $show_reject = $this->Absence->isOwnedBy($id, $this->Auth->user('id')) && empty($absence['Absence']['fulfiller_id']);
+				$show_applicants = $show_reject = $this->Absence->isOwnedBy($id, $viewer_id) && empty($absence['Absence']['fulfiller_id']);
 				break;
 			}
 		}
@@ -302,7 +306,7 @@ class AbsencesController extends AppController {
 		// get list of applicants
 		$applications = $this->Absence->Application->findAllByAbsenceId($id, array('Application.id', 'User.id', 'User.username', 'User.email_address', 'User.primary_phone', 'User.first_name', 'User.last_name'));
 
-		$this->set(compact('absence', 'show_apply', 'show_retract', 'show_approve', 'show_deny', 'show_edit', 'show_delete', 'approval_status', 'applications', 'show_applicants', 'show_reject'));
+		$this->set(compact('absence', 'show_apply', 'show_retract', 'show_approve', 'show_deny', 'show_edit', 'show_delete', 'approval_status', 'applications', 'show_applicants', 'show_reject', 'show_renege'));
 	}
 
 /**

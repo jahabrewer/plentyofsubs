@@ -12,11 +12,6 @@
 			<?php echo h($user['User']['username']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Password'); ?></dt>
-		<dd>
-			<?php echo h($user['User']['password']); ?>
-			&nbsp;
-		</dd>
 		<dt><?php echo __('Role'); ?></dt>
 		<dd>
 			<?php echo h($user['User']['role']); ?>
@@ -94,8 +89,8 @@
   <ul id="sideNav">
     <?php
     if ($show_review) echo $this->Html->link('<li>'.$this->Html->image('icons/help.png').'Review This Sub'.'</li>', array('controller' => 'reviews', 'action' => 'add', $user['User']['id']), array('escape' => false));
-    if ($show_edit) echo $this->Html->link('<li>'.$this->Html->image('icons/help.png').'Edit'.'</li>', array('controller' => 'users', 'action' => 'edit', $user['User']['id']), array('escape' => false));
-    if ($show_delete) echo $this->Html->link('<li>'.$this->Html->image('icons/help.png').'Delete'.'</li>', array('controller' => 'users', 'action' => 'delete', $user['User']['id']), array('escape' => false), 'Are you sure you want to delete this user?');
+    if ($show_edit) echo $this->Html->link('<li>'.$this->Html->image('icons/edit.png').'Edit'.'</li>', array('controller' => 'users', 'action' => 'edit', $user['User']['id']), array('escape' => false));
+    if ($show_delete) echo $this->Html->link('<li>'.$this->Html->image('icons/delete.png').'Delete'.'</li>', array('controller' => 'users', 'action' => 'delete', $user['User']['id']), array('escape' => false), 'Are you sure you want to delete this user?');
     ?>
   </ul>
 </div>
