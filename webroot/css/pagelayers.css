@@ -85,6 +85,74 @@
 	background-image:-o-linear-gradient(top, #66cc66, #008800);
 	background-image:linear-gradient(top, #66cc66, #008800);
 }
+
+/* --- HOME PAGE --- */
+#introPage {
+	width:960px;
+	color:#808080;
+	text-align:center;
+	font-weight:normal;
+}
+
+#introPage > p {
+	font-size:1.125em;
+}
+
+#signUpButton {
+	display:inline-block;
+	width:275px;
+	height:65px;
+	color:#ffffff;
+	font-size:1.325em;
+	font-weight:bold;
+	line-height:40px;
+	text-shadow:1px 1px 1px #000000;
+	background:#008800;
+	background-image:-webkit-gradient(linear, left top, left bottom, from(#66cc66), to(#008800));
+	background-image:-webkit-linear-gradient(top, #66cc66, #008800);
+	background-image:-moz-linear-gradient(top, #66cc66, #008800);
+	background-image:-ms-linear-gradient(top, #66cc66, #008800);
+	background-image:-o-linear-gradient(top, #66cc66, #008800);
+	background-image:linear-gradient(top, #66cc66, #008800);
+	border:1px #44aa44 solid;
+	border-radius:6px;
+}
+
+#signUpButton:hover {
+	color:#ffffff;
+	text-shadow:1px 1px 1px #000000;
+	background:#119911;
+	background-image:-webkit-gradient(linear, left top, left bottom, from(#77dd77), to(#119911));
+	background-image:-webkit-linear-gradient(top, #77dd77, #119911);
+	background-image:-moz-linear-gradient(top, #77dd77, #119911);
+	background-image:-ms-linear-gradient(top, #77dd77, #119911);
+	background-image:-o-linear-gradient(top, #77dd77, #119911);
+	background-image:linear-gradient(top, #77dd77, #119911);
+}
+
+.title {
+	color:#000000;
+	font-size:3em;
+	font-weight:bold;
+	font-variant:small-caps;
+	margin:0.5em 0;
+}
+
+.introBlock {
+	float:left;
+	width:222px;
+	text-align:left;
+	margin:24px 24px 0 0;
+}
+
+.introBlock:last-child {
+	 margin-right:-24px;
+}
+
+.introBlock > strong {
+	color:#000000;
+	font-size:1.125em;
+}
 	
 /* --- DASHBOARD PAGE --- */
 #dashboardNewsList {
