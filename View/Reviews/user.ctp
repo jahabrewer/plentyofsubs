@@ -1,26 +1,23 @@
 <h1><?php  echo "Reviews of {$subject['Subject']['first_name']} {$subject['Subject']['last_name']}";?></h1>
 <div id="fullContent">
 	<div class="reviews view">
-		<div id="leftContent">
-			<dl>
-				<?php foreach ($reviews as $review): ?>
-					<dt>
-						<?php for ($i=0; $i<$review['Review']['rating']; $i++) echo '*'; ?>
-						<?php echo ' on ' . date('F j, Y', strtotime($review['Review']['created'])); ?>
-						<?php if ($review['Review']['created'] !== $review['Review']['modified']) echo ' (updated ' . date('F j, Y', strtotime($review['Review']['modified'])) . ')'; ?>
-						<br />
-						By <?php echo $this->Html->link("{$review['Author']['first_name']} {$review['Author']['last_name']}", array('controller' => 'users', 'action' => 'view', $review['Author']['id'])) . ' &lt;' . $this->Html->link($review['Author']['email_address'], "mailto:{$review['Author']['email_address']}") . '&gt;'; ?>
-					</dt>
-					<dd>
-						<p><?php echo nl2br($review['Review']['review']); ?></p>
-						&nbsp;
-					</dd>
-					<hr />
-				<?php endforeach; ?>
-			</dl>
-		</div>
-	</div>
-	<div id="rightContent">
+		<dl>
+			<?php foreach ($reviews as $review): ?>
+				<dt>
+					<span style="color:#e14b4b;"><?php echo $review['Review']['rating'].(($review['Review']['rating'] = 1) ? " star" : " stars"); ?></span>
+					<!-- <?php for ($i=0; $i<$review['Review']['rating']; $i++) echo '&diams;'; ?> -->
+					<?php echo ' on ' . date('F j, Y', strtotime($review['Review']['created'])); ?>
+					<?php if ($review['Review']['created'] !== $review['Review']['modified']) echo ' (updated ' . date('F j, Y', strtotime($review['Review']['modified'])) . ')'; ?>
+					<br />
+					By <?php echo $this->Html->link("{$review['Author']['first_name']} {$review['Author']['last_name']}", array('controller' => 'users', 'action' => 'view', $review['Author']['id'])) . ' &lt;' . $this->Html->link($review['Author']['email_address'], "mailto:{$review['Author']['email_address']}") . '&gt;'; ?>
+				</dt>
+				<dd>
+					<p><?php echo nl2br($review['Review']['review']); ?></p>
+					&nbsp;
+				</dd>
+				<hr />
+			<?php endforeach; ?>
+		</dl>
 	</div>
 	<div class="spacer"></div>
 	<p>

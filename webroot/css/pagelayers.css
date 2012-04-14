@@ -130,14 +130,6 @@
 	background-image:linear-gradient(top, #77dd77, #119911);
 }
 
-.title {
-	color:#000000;
-	font-size:3em;
-	font-weight:bold;
-	font-variant:small-caps;
-	margin:0.5em 0;
-}
-
 .introBlock {
 	float:left;
 	width:222px;
@@ -192,6 +184,52 @@
 
 #dashboardAbsenceList table, #dashboardApplicantsList table {
 	border:1px #000 solid;
+}
+
+/* --- VIEW USER PAGE --- */
+ul.userPage, ol.userPage {
+	line-height:2.5em;
+}
+
+ul.userPage span {
+	float:none;
+	font-weight:normal;
+}
+
+.userNameTitle {
+	color:#e14b4b;
+	text-align:center;
+	font-size:2.25em;
+	font-weight:bold;
+	margin:0;
+}
+/* Used for the User Role in View User */
+.userRoleTitle {
+	color:#666666;
+	text-align:center;
+	font-size:0.5em;
+	font-style:oblique;
+}
+
+.ratingTitle {
+	color:#007799;
+	text-align:center;
+	font-size:1.75em;
+	font-weight:bold;
+	margin:0;
+}
+
+.rating {
+	color:#009977;
+	text-align:center;
+	font-size:6em;
+	font-weight:bold;
+	margin:0.625em 0;
+}
+
+.ratingSubtitle {
+	text-align:center;
+	font-size:1.125em;
 }
 
 /* --- ABSENCE PAGE --- */
