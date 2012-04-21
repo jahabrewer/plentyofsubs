@@ -31,18 +31,18 @@
     <ul id="dashboardNewsList">
       <a href="#">
       <li>
-        <h3>March 9, 2012</h3>
-        <p>More stuff happened</p>
+        <h3>April 23, 2012</h3>
+        <p>The Cake is a Lie</p>
       </li>
       </a> <a href="#">
       <li>
-        <h3>February 29, 2012</h3>
-        <p>Leap year happened</p>
+        <h3>April 19, 2012</h3>
+        <p>The Cake is a Lie</p>
       </li>
       </a> <a href="#">
       <li>
-        <h3>February 14, 2012</h3>
-        <p>Stuff happened</p>
+        <h3>April 12, 2012</h3>
+        <p>This project will finish, and then there will be cake.</p>
       </li>
       </a>
     </ul>
@@ -51,8 +51,7 @@
   <!-- CALENDAR -->
   <div id="dashboardCalendar">
     <h2>Calendar</h2>
-    <p>No working calendar yet. Replace this part with some calendar widget.</p>
-    <div style="height:300px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ullamcorper leo nec est laoreet posuere. Maecenas a bibendum turpis. Sed tincidunt vulputate metus, sed suscipit elit aliquam vitae. Etiam quis vehicula ante. Quisque eleifend mattis lacus nec sodales. Mauris volutpat lectus ac magna vehicula malesuada. Aenean tristique lacinia turpis, at vulputate magna venenatis eget. Nam posuere nisl nec eros scelerisque ac elementum augue viverra. Nulla porttitor dapibus eros ut sagittis. Phasellus lacinia fermentum nunc, quis rhoncus justo auctor a. Aenean non dui ligula.</div>
+    <img src="../img/calendar_widget.png" />
   </div>
 </div>
 <!-- END LEFT (MIDDLE) CONTENT COLUMN -->
