@@ -113,7 +113,7 @@ INSERT INTO schools (name, abbreviation, street_address) VALUES
 	('Len Lastinger Primary', 'LLP', '802 Lakeside Dr');
 
 INSERT INTO users (username, password, role, first_name, middle_initial, last_name, email_address, primary_phone, education_level_id, certification, school_id) VALUES
-	('ariadne', '0336f0081bc7b681e93679021ae75720e001012f', 'admin', 'Ariadne', 'A', 'Adminis', 'ariadne@example.com', '555-555-6789', null, null, null),
+	('ariadne', '0336f0081bc7b681e93679021ae75720e001012f', 'admin', 'Ariadne', 'A', 'Adminis', 'ariadne@example.com', '555-555-6789', null, null, 1),
 	('tess', '0336f0081bc7b681e93679021ae75720e001012f', 'teacher', 'Tess', 'T', 'Techa', 'tess@example.com', '555-555-1290', null, null, 1),
 	('steph', '0336f0081bc7b681e93679021ae75720e001012f', 'substitute', 'Steph', 'S', 'Subst', 'steph@example.com', '555-555-9934', 2, '2005-03-11', null);
 
