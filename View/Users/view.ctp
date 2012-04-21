@@ -17,10 +17,12 @@
 		</ul>
 	</div>
 	<div id="rightContent">
-		<p class="ratingTitle">Average Rating</p>
-		<p class="rating"><?php echo sprintf('%.1f', $user['User']['average_rating']); ?><span style="position:relative; top:0.25em; color:#000; font-size:0.5em;">/5</span></p>
-		<p class="ratingSubtitle"><?php echo ' by ' . h($user['User']['reviewer_count']) . ' teachers'; ?><br />
-		<?php echo $this->Html->link('See reviews', array('controller' => 'reviews', 'action' => 'user', $user['User']['id'])); ?></p>
+		<?php if ($user['User']['role'] === 'substitute'): ?>
+			<p class="ratingTitle">Average Rating</p>
+			<p class="rating"><?php echo sprintf('%.1f', $user['User']['average_rating']); ?><span style="position:relative; top:0.25em; color:#000; font-size:0.5em;">/5</span></p>
+			<p class="ratingSubtitle"><?php echo ' by ' . h($user['User']['reviewer_count']) . ' teachers'; ?><br />
+			<?php echo $this->Html->link('See reviews', array('controller' => 'reviews', 'action' => 'user', $user['User']['id'])); ?></p>
+		<?php endif; ?>
 	</div>
 	<div id="spacer"></div>
 	<div id="fullContent">
