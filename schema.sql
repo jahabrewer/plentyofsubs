@@ -17,8 +17,8 @@ CREATE TABLE users (
 	education_level_id int unsigned,
 	certification date,
 	school_id int unsigned,
-	average_rating float,
-	reviewer_count int unsigned,
+	average_rating float DEFAULT 0,
+	reviewer_count int unsigned DEFAULT 0,
 	created datetime,
 	modified datetime
 );
