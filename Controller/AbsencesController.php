@@ -484,6 +484,9 @@ public function add() {
 		$this->redirect(array('action' => 'view', $id));
 	}
 
+/**
+ * Prepares information for display on the dashboard
+ */
 	public function dashboard() {
 		$this->set('title_for_layout', 'Dashboard');
 		$this->set('layout_current', array('dashboard' => true));

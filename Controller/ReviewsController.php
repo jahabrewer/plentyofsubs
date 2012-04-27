@@ -161,6 +161,11 @@ class ReviewsController extends AppController {
 		$this->redirect(array('action' => 'index'));
 	}
 
+/**
+ * Shows reviews for a particular user
+ *
+ * @param string $id The id of the user whose reviews will be viewed
+ */
 	public function user($id = null) {
 		// retrieve subject/user only if sub
 		$subject = $this->Review->Subject->findById($id);

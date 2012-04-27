@@ -138,6 +138,9 @@ class User extends AppModel {
 		)
 	);
 
+/**
+ * Before save callback
+ */
 	public function beforeSave() {
 		if (isset($this->data[$this->alias]['password'])) {
 			$this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);

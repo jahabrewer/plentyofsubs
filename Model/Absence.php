@@ -70,6 +70,12 @@ class Absence extends AppModel {
 		)
 	);
 
+/**
+ * Performs validation on two dates, ensuring that start occurs before end
+ *
+ * @param array $check Contains the dates to check
+ * @return boolean
+ */
 	public function dateSanityCheck($check) {
 		if (isset($check['start']))
 			return $check['start'] < $this->data[$this->alias]['end'];
@@ -77,14 +83,35 @@ class Absence extends AppModel {
 			return $check['end'] > $this->data[$this->alias]['start'];
 	}
 
+/**
+ * Checks whether an absence is owned by a user
+ *
+ * @param string $absence_id The absence in question
+ * @param string $user_id The user in question
+ * @return boolean
+ */
 	public function isOwnedBy($absence_id, $user_id) {
 		return $this->field('id', array('id' => $absence_id, 'absentee_id' => $user_id)) === $absence_id;
 	}
 
+/**
+ * Checks whether an absence is fulfilled by a user
+ *
+ * @param string $absence_id The absence in question
+ * @param string $user_id The user in question
+ * @return boolean
+ */
 	public function isFulfilledBy($absence_id, $user_id) {
 		return $this->field('id', array('id' => $absence_id, 'fulfiller_id' => $user_id)) === $absence_id;
 	}
 
+/**
+ * Checks whether an absence has received an application from a user
+ *
+ * @param string $absence_id The absence in question
+ * @param string $user_id The user in question
+ * @return boolean
+ */
 	public function hasApplicationFrom($absence_id, $user_id) {
 		$application = $this->Application->find('first', array(
 			'conditions' => array(
