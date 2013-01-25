@@ -17,97 +17,67 @@
  */
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
 	<?php echo $this->Html->charset(); ?>
 	<title>
 		<?php echo 'PlentyOfSubs | '; ?>
 		<?php echo $title_for_layout; ?>
 	</title>
+	<style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
 	<?php
-		echo $this->Html->meta('icon');
+		echo $this->Html->css('bootstrap.min');
+		
 
-		//echo $this->Html->css('cake.generic');
-		echo $this->Html->css('layout');
-		echo $this->Html->css('pagelayers');
-		echo $this->Html->css('formatting');
-
-		echo $this->Html->script('jquery-1.7.1');
-		echo $this->Html->script('layout');
+		echo $this->Html->script('jquery-1.9.0.min');
+		echo $this->Html->script('bootstrap.min');
 		echo $scripts_for_layout;
 	?>
 </head>
 <body>
-	<div id="header">
-		<div id="logo"><?php echo $this->Html->image('layout/logo.png', array('alt' => 'PlentyOfSubs', 'url' => array('controller' => 'absences', 'action' => 'dashboard'))); ?></div>
-		<?php if ($logged_in): ?>
-			<div id="welcomeMessage">Welcome back, <span class="userName"><?php echo $logged_in_firstname; ?></span>!</div>
-			<ul id="nav">
-			<!-- Put class="current" in the <a> tag corresponding to which page this is -->
-			  <li><?php echo $this->Html->link('Dashboard', array('controller' => 'absences', 'action' => 'dashboard'), isset($layout_current['dashboard']) ? array('class' => 'current') : null); ?></li>
-			  <li><a<?php echo isset($layout_current['absences']) ? ' class="current"' : ''; ?>>Absences</a>
-			    <ul>
-			      <li><?php echo $this->Html->link('My Absences', array('controller' => 'absences', 'action' => 'my')); ?></li>
-			      <li><?php echo $this->Html->link('Search Absences', array('controller' => 'absences', 'action' => 'index')); ?></li>
-			      <li><?php echo $this->Html->link('Pending Absences', array('controller' => 'absences', 'action' => 'pending')); ?></li>
-			      <li><?php echo $this->Html->link('Create Absence', array('controller' => 'absences', 'action' => 'add')); ?></li>
-			    </ul>
-			  </li>
-			  <li><a href="#">Profile</a>
-			    <ul>
-			      <li><?php echo $this->Html->link('Edit Profile', array('controller' => 'users', 'action' => 'edit', $logged_in_userid)); ?></li>
-			      <li><a href="#">Messages</a></li>
-			    </ul>
-			  </li>
-			  <li><a href="#">Account</a>
-			    <ul>
-			      <li><a href="#">Account Settings</a></li>
-			      <li><a href="#">Privacy Settings</a></li>
-			    </ul>
-			  </li>
-			  <li><a href="#">Help</a>
-			    <ul>
-			      <li><a href="#">How To Guide</a></li>
-			      <li><a href="#">FAQs</a></li>
-			    </ul>
-			  </li>
-			  <li><?php echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?></li>
-			</ul>
-		<?php else: ?>
-			<ul id="nav">
-			  <li><?php echo $this->Html->link('Login', array('controller' => 'users', 'action' => 'login')); ?></li>
-			</ul>
-		<?php endif; ?>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<?php echo $this->Html->link('PlentyOfSubs', array('controller' => 'pages', 'action' => 'display', 'home'), array('class' => 'brand')); ?>
+				<?php if ($logged_in): ?>
+					<ul class="nav">
+						<li><?php echo $this->Html->link('Dashboard', array('controller' => 'absences', 'action' => 'dashboard')); ?></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Absences <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><?php echo $this->Html->link('My Absences', array('controller' => 'absences', 'action' => 'my'), array ('tabindex' => '-1')); ?></li>
+								<li><?php echo $this->Html->link('Search Absences', array('controller' => 'absences', 'action' => 'index'), array ('tabindex' => '-1')); ?></li>
+								<li><?php echo $this->Html->link('Pending Absences', array('controller' => 'absences', 'action' => 'pending'), array ('tabindex' => '-1')); ?></li>
+								<li><?php echo $this->Html->link('Create Absence', array('controller' => 'absences', 'action' => 'add'), array ('tabindex' => '-1')); ?></li>
+							</ul>
+						</li>
+						<li><?php echo $this->Html->link('Welcome back, ' . $logged_in_firstname, array('controller' => 'users', 'action' => 'edit', $logged_in_userid)); ?></li>
+						<li><?php echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?></li>
+					</ul>
+				<?php else: ?>
+					<ul class="nav">
+						<li><?php echo $this->Html->link('Login', array('controller' => 'users', 'action' => 'login')); ?></li>
+					</ul>
+				<?php endif; ?>
+			</div>
+		</div>
 	</div>
-	<div id="bodyContainer">
+	<div class="container">
 		<?php echo $this->Session->flash(); ?>
 
 		<?php echo $content_for_layout; ?>
 
+		<hr>
+		<footer>
+			<?php //echo $this->element('sql_dump'); ?>
+			<p>&copy; Copyright 2012-2013 Janzen Brewer, Nathaniel Tinkler, Jianzhuo Wu
+		</footer>
 	</div>
-
-	<div class="spacer"></div>
-
-	<div id="footer">
-		<div class="leftAligned">
-			<ul>
-				<li><a href="#">About</a></li>
-				|
-				<li><a href="#">Privacy</a></li>
-				|
-				<li><a href="#">Terms of Use</a></li>
-				|
-				<li><a href="#">Feedback</a></li>
-				|
-				<li><a href="#">Contact</a></li>
-				|
-				<li><a href="#">Help</a></li>
-			</ul>
-			<p>PlentyOfSubs is free software licensed under the <?php echo $this->Html->link('GNU GPL v3', 'http://www.gnu.org/licenses/gpl.txt'); ?></p>
-		</div>
-		<div class="rightAligned"> PlentyOfSubs Copyright 2012 Janzen Brewer, Nathaniel Tinkler, Jianzhuo Wu</div>
-	</div>
-	<?php //echo $this->element('sql_dump'); ?>
 </body>
 </html>
