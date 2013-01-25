@@ -108,6 +108,6 @@
 		</div>
 		<div class="rightAligned"> PlentyOfSubs Copyright 2012 Janzen Brewer, Nathaniel Tinkler, Jianzhuo Wu</div>
 	</div>
-	<?php echo $this->element('sql_dump'); ?>
+	<?php //echo $this->element('sql_dump'); ?>
 </body>
 </html>

@@ -64,6 +64,8 @@ Cache::config('default', array('engine' => 'File'));
  *
  */
 
+CakePlugin::load('DebugKit');
+
 /**
  * CakePHP 2.2 compatibility
  *

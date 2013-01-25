@@ -11,7 +11,8 @@ class AppController extends Controller {
 			'loginRedirect' => array('controller' => 'absences', 'action' => 'dashboard'),
 			'logoutRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
 			'authorize' => array('Controller'),
-			)
+			),
+		'DebugKit.Toolbar'
 		);
 
 /**
