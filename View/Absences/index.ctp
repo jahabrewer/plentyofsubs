@@ -1,66 +1,80 @@
-<?php echo $this->element('SideMenu'); ?>
-<h1><?php echo __($page_legend);?></h1>
-<div id="fullContent">
-<div class="absences index">
-	<?php if ($show_filters): ?>
-		<div>
-			<?php echo $this->Form->create('filter');?>
-				<fieldset>
-				<?php
-				echo $this->Form->radio('date_select', array('anytime', 'before', 'after'), array('default' => 'anytime'));
-				echo '<div style="float:left; width:8em;">Date:</div>';
-				echo $this->Form->dateTime('date', 'DMY', null, array('empty' => false));
-				echo '<br />';
-				echo '<div style="float:left; width:8em;">School:</div>';
-				echo $this->Form->select('schools', $schools, array('empty' => 'All Schools'));
-				echo '<br />';
-				echo '<div style="float:left; width:8em;">Teacher:</div>';
-				echo $this->Form->select('teachers', $teachers, array('empty' => 'All Teachers'));
-				?>
-				</fieldset>
-			<?php echo $this->Form->end(__('Apply Filter'));?>
-		</div>
-		<hr />
-	<?php endif; ?>
-	<div class="table">
-		<div class="row">
-			<span class="cell"><?php echo $this->Paginator->sort('absentee_id');?></span>
-			<span class="cell"><?php echo $this->Paginator->sort('fulfiller_id');?></span>
-			<span class="cell"><?php echo $this->Paginator->sort('school_id', 'Location');?></span>
-			<span class="cell"><?php echo $this->Paginator->sort('start', 'Date');?></span>
-		</div>
-		<?php foreach ($absences as $absence): ?>
-			<a class="rowLink" href="<?php echo $this->Html->url(array('controller' => 'absences', 'action' => 'view', $absence['Absence']['id'])); ?>">
-				<span class="cell">
-					<?php echo $absence['Absentee']['username']; ?>
-				</span>
-				<span class="cell">
-					<?php echo $absence['Fulfiller']['username']; ?>&nbsp;
-				</span>
-				<span class="cell">
-					<?php echo "{$absence['School']['name']} {$absence['Absence']['room']}"; ?>
-				</span>
-				<span class="cell"><?php echo $this->Absence->formatDateRange($absence['Absence']['start'], $absence['Absence']['end'], array('short' => true)); ?>&nbsp;</span>
-			</a>
-		<?php endforeach; ?>
-	</div>
-	<hr />
-	<p>
-	<?php
-	echo $this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} absences out of {:count} total')
-	));
-	?>	</p>
+<script>
+	$(function() {
+		$( "#datepicker" ).datepicker();
+	});
+</script>
 
-	<div class="paging">
-	<?php
-		echo '<div style="display:block; float:right;">';
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-		echo '&nbsp;';
-		echo $this->Paginator->numbers(array('separator' => ''));
-		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
-		echo '</div>';
-	?>
+<div class="row">
+	<div class="span3">
+		<?php if ($show_filters): ?>
+			<?php echo $this->Form->create('filter', array('class' => '')); ?>
+				<fieldset>
+					<div class="control-group">
+						<label class="control-label" for="filterDateSelect">When</label>
+						<div class="controls">
+							<?php echo $this->Form->select('date_select', array('before' => 'Before', 'after' => 'After'), array('empty' => 'Anytime')); ?>
+							<?php echo $this->Form->text('date', array('id' => 'datepicker', 'placeholder' => 'Date')); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="filterSchools">Where</label>
+						<div class="controls">
+							<?php echo $this->Form->select('schools', $schools, array('empty' => 'All Schools')); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="filterTeachers">Who</label>
+						<div class="controls">
+							<?php echo $this->Form->select('teachers', $teachers, array('empty' => 'All Teachers')); ?>
+						</div>
+					</div>
+				</fieldset>
+			<?php echo $this->Form->end(array('label' => 'Apply Filter', 'class' => 'btn'));?>
+			<hr>
+		<?php endif; ?>
 	</div>
-</div>
+	<div class="span9">
+		<h1><?php echo __($page_legend);?></h1>
+		
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th><?php echo $this->Paginator->sort('absentee_id');?></th>
+					<th><?php echo $this->Paginator->sort('fulfiller_id');?></th>
+					<th><?php echo $this->Paginator->sort('school_id', 'Location');?></th>
+					<th><?php echo $this->Paginator->sort('start', 'Date');?></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($absences as $absence): ?>
+					<tr>
+						<td><?php echo $absence['Absentee']['username']; ?></td>
+						<td><?php echo $absence['Fulfiller']['username']; ?></td>
+						<td><?php echo "{$absence['School']['abbreviation']} {$absence['Absence']['room']}"; ?></td>
+						<td><?php echo $this->Absence->formatDateRange($absence['Absence']['start'], $absence['Absence']['end'], array('short' => true)); ?></td>
+						<td><?php echo $this->Html->link('View', array('action' => 'view', $absence['Absence']['id'])); ?></td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+		<hr>
+		<p>
+		<?php
+		echo $this->Paginator->counter(array(
+		'format' => __('Page {:page} of {:pages}, showing {:current} absences out of {:count} total')
+		));
+		?>	</p>
+
+		<div class="paging">
+		<?php
+			echo '<div style="display:block; float:right;">';
+			echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
+			echo '&nbsp;';
+			echo $this->Paginator->numbers(array('separator' => ''));
+			echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
+			echo '</div>';
+		?>
+		</div>
+	</div>
 </div>

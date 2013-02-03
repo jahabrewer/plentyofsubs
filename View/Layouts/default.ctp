@@ -26,16 +26,18 @@
 		<?php echo $title_for_layout; ?>
 	</title>
 	<style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
-    </style>
+		body {
+			padding-top: 60px;
+			padding-bottom: 40px;
+		}
+	</style>
 	<?php
+		echo $this->Html->css('ui-lightness/jquery-ui-1.10.0.custom');
 		echo $this->Html->css('bootstrap.min');
 		
 
 		echo $this->Html->script('jquery-1.9.0.min');
+		echo $this->Html->script('jquery-ui-1.10.0.custom.min');
 		echo $this->Html->script('bootstrap.min');
 		echo $scripts_for_layout;
 	?>
@@ -46,9 +48,13 @@
 			<div class="container">
 				<?php echo $this->Html->link('PlentyOfSubs', array('controller' => 'pages', 'action' => 'display', 'home'), array('class' => 'brand')); ?>
 				<?php if ($logged_in): ?>
+					<?php
+						$dashboardLiClass = isset($layout_current['dashboard']) ? 'active' : '';
+						$absencesLiClass = isset($layout_current['absences']) ? 'active' : '';
+					?>
 					<ul class="nav">
-						<li><?php echo $this->Html->link('Dashboard', array('controller' => 'absences', 'action' => 'dashboard')); ?></li>
-						<li class="dropdown">
+						<li class="<?php echo $dashboardLiClass; ?>"><?php echo $this->Html->link('Dashboard', array('controller' => 'absences', 'action' => 'dashboard')); ?></li>
+						<li class="dropdown <?php echo $absencesLiClass; ?>">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Absences <b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								<li><?php echo $this->Html->link('My Absences', array('controller' => 'absences', 'action' => 'my'), array ('tabindex' => '-1')); ?></li>
@@ -72,11 +78,11 @@
 		<?php echo $this->Session->flash(); ?>
 
 		<?php echo $content_for_layout; ?>
-
+		<?php echo $this->Js->writeBuffer(); ?>
 		<hr>
 		<footer>
 			<?php //echo $this->element('sql_dump'); ?>
-			<p>&copy; Copyright 2012-2013 Janzen Brewer, Nathaniel Tinkler, Jianzhuo Wu
+			<!--<p>&copy; Copyright 2012-2013 Janzen Brewer, Nathaniel Tinkler, Jianzhuo Wu</p>-->
 		</footer>
 	</div>
 </body>

@@ -1,4 +1,3 @@
-<?php echo $this->element('SideMenu'); ?>
 <h1>Edit Absence</h1>
 <div id="fullContent">
 	<div class="absences form">

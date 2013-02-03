@@ -1,5 +1,7 @@
 <?php
-App::uses('AppController', 'Controller', 'Time');
+App::uses('AppController', 'Controller');
+App::uses('Sanitize', 'Utility');
+
 /**
  * Absences Controller
  *
@@ -61,15 +63,15 @@ class AbsencesController extends AppController {
 		// only show absences in the future
 		$conditions = array('Absence.start > NOW()');
 		if ($this->request->is('post')) {
-			define('BEFORE', '1');
-			define('AFTER', '2');
 			// build conditions from filter
 			$data = $this->request->data['filter'];
 
-			if ($data['date_select'] == BEFORE) {
-				$conditions['Absence.start <'] = $data['date']['year'].'-'.$data['date']['month'].'-'.$data['date']['day'];
-			} else if ($data['date_select'] == AFTER) {
-				$conditions['Absence.start >'] = $data['date']['year'].'-'.$data['date']['month'].'-'.$data['date']['day'];
+			// sanitize date
+			$data['date'] = Sanitize::clean($data['date']);
+			if ($data['date_select'] == 'before') {
+				$conditions['Absence.start <'] = $data['date'];
+			} else if ($data['date_select'] == 'after') {
+				$conditions['Absence.start >'] = $data['date'];
 			}
 
 			if (isset($data['schools']) && !empty($data['schools'])) {
@@ -559,4 +561,18 @@ public function add() {
 		}
 		$this->set(compact('notifications'));
 	}
+	
+	/*public function ajaxTest($id = null) {
+		if ($this->request->is('ajax'))
+		{
+			CakeLog::debug('is ajax');
+			$this->Absence->id = $id;
+			if (!$this->Absence->exists()) {
+				throw new NotFoundException(__('Invalid absence'));
+			}
+			$this->set('absence', $this->Absence->read(null, $id));
+			$this->render('view', 'ajax');
+		}
+		
+	}*/
 }

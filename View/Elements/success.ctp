@@ -1,1 +1,1 @@
-<div id="flashMessage" class="flash-success"><?php echo $message; ?></div>
+<div class="alert alert-success"><?php echo $message; ?></div>
