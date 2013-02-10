@@ -32,6 +32,28 @@ class School extends AppModel {
 			'dependent' => false,
 		)
 	);
+	
+	
+	public $validate = array(
+		'name' => array(
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'message' => 'Required'
+			)
+		),
+		'abbreviation' => array(
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'message' => 'Required'
+			)
+		),
+		'street_address' => array(
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'message' => 'Required'
+			)
+		),
+	);
 
 
 /**

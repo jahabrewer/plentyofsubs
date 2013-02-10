@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('Sanitize', 'Utility');
+App::uses('CakeTime', 'Utility');
 
 /**
  * Absences Controller
@@ -15,7 +16,33 @@ class AbsencesController extends AppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 		// this defaults the layout to show absences as the current tab
-		$this->set('layout_current', array('absences' => true));
+		$this->set('layout_current', 'absences');
+		
+		// figure out which buttons we can show
+		$role = $this->Auth->user('role');
+		$user_is_teacher = $role === 'teacher';
+		$user_is_sub = $role === 'substitute';
+		$user_is_admin = $role === 'admin';
+		
+		$button_visibility = array(
+			'all' => false,
+			'pending' => false,
+			'my' => false,
+			'available' => false,
+			'new' => false
+		);
+		if ($user_is_teacher) {
+			$button_visibility['new'] = true;
+			$button_visibility['my'] = true;
+		} elseif ($user_is_sub) {
+			$button_visibility['my'] = true;
+			$button_visibility['all'] = true;
+			$button_visibility['available'] = true;
+		} elseif ($user_is_admin) {
+			$button_visibility['pending'] = true;
+			$button_visibility['all'] = true;
+		}
+		$this->set('button_visibility', $button_visibility);
 	}
 	
 /**
@@ -29,8 +56,8 @@ class AbsencesController extends AppController {
 			return true;
 		}
 
-		if ($this->action === 'dashboard') return true;
-
+		if ($this->action === 'defaultview') return true;
+		// TODO some logic here returns and doesn't set flash message, fix it
 		if (isset($user['role'])) {
 			$absence_id =& $this->request->params['pass'][0];
 			if ($user['role'] === 'teacher') {
@@ -40,7 +67,7 @@ class AbsencesController extends AppController {
 				// check for ownership for RUD
 				if (in_array($this->action, array('view', 'edit', 'delete'))) return $this->Absence->isOwnedBy($absence_id, $user['id']);
 			} elseif ($user['role'] === 'substitute') {
-				if (in_array($this->action, array('my', 'view', 'index', 'apply', 'retract'))) return true;
+				if (in_array($this->action, array('my', 'available', 'view', 'index', 'apply', 'retract'))) return true;
 
 				// check fulfiller ownership for renege
 				if ($this->action == 'renege') return $this->Absence->isFulfilledBy($absence_id, $user['id']);
@@ -50,6 +77,16 @@ class AbsencesController extends AppController {
 		$this->Session->setFlash('You are not authorized for that action', 'error');
 		return false;
 	}
+	
+	public function defaultview() {
+		$role = $this->Auth->user('role');
+		$user_is_teacher = $role === 'teacher';
+		$user_is_sub = $role === 'substitute';
+		$user_is_admin = $role === 'admin';
+		
+		if ($user_is_teacher || $user_is_sub) { $this->redirect(array('action' => 'my')); }
+		else { $this->redirect(array('action' => 'index')); }
+	}
 
 /**
  * index method
@@ -57,43 +94,116 @@ class AbsencesController extends AppController {
  * @return void
  */
 	public function index() {
+		$this->_index();
+	}
+	
+	private function _index($general_filter = '') {
 		// include absences helper for formatting date ranges
 		$this->helpers[] = 'Absence';
+		
+		$role = $this->Auth->user('role');
+		$user_is_teacher = $role === 'teacher';
+		$user_is_sub = $role === 'substitute';
+		
+		// determine which columns to show
+		$column_visibility = array(
+			'absentee' => true,
+			'fulfiller' => true,
+			'location' => true,
+			'date' => true,
+		);
+		switch ($general_filter) {
+			case 'my':
+				if ($user_is_teacher) { $column_visibility['absentee'] = false; }
+				elseif ($user_is_sub) { $column_visibility['fulfiller'] = false; }
+				break;
+			case 'available':
+				$column_visibility['fulfiller'] = false;
+				break;
+		}
+		$this->set('column_visibility', $column_visibility);
 
 		// only show absences in the future
 		$conditions = array('Absence.start > NOW()');
-		if ($this->request->is('post')) {
-			// build conditions from filter
-			$data = $this->request->data['filter'];
-
-			// sanitize date
-			$data['date'] = Sanitize::clean($data['date']);
-			if ($data['date_select'] == 'before') {
-				$conditions['Absence.start <'] = $data['date'];
-			} else if ($data['date_select'] == 'after') {
-				$conditions['Absence.start >'] = $data['date'];
-			}
-
-			if (isset($data['schools']) && !empty($data['schools'])) {
-				$conditions['Absence.school_id'] = $data['schools'];
-			}
-
-			if (isset($data['teachers']) && !empty($data['teachers'])) {
-				$conditions['Absence.absentee_id'] = $data['teachers'];
-			}
+		
+		// build conditions from filters
+		$filter =& $this->request->query;
+		if (!empty($filter['dateStart'])) {
+			$conditions['Absence.start >'] = $this->request->data['filter']['dateStart'] = Sanitize::clean($filter['dateStart']);
+		}
+	
+		if (isset($filter['dateEnd']) && !empty($filter['dateEnd'])) {
+			$dateEnd = Sanitize::clean($filter['dateEnd']);
+			$conditions['Absence.start <'] = date('Y-m-d 23:59:59', strtotime($dateEnd));
+			$this->request->data['filter']['dateEnd'] = $dateEnd;
+		}
+		
+		if (isset($filter['school']) && !empty($filter['school'])) {
+			$conditions['School.name'] = $this->request->data['filter']['school'] = $filter['school'];
 		}
 
+		if (isset($filter['absentee']) && !empty($filter['absentee'])) {
+			$conditions['Absentee.username'] = $this->request->data['filter']['absentee'] = $filter['absentee'];
+		}
+		
+		// add filtering based on the url
+		// determine which sidebar button is active
+		$button_active = array(
+			'my' => false,
+			'all' => false,
+			'available' => false,
+			'pending' => false,
+		);
+		switch ($general_filter) {
+			case 'pending':
+				$button_active['pending'] = true;
+				// guaranteed that the user is an admin
+				// verify that the admin belongs to a school
+				$school_id = $this->Auth->user('school_id');
+				if (empty($school_id)) {
+					$this->Session->setFlash('You belong to no school', 'error');
+				}
+				$conditions['Absence.school_id'] = $school_id;
+				$conditions['Absence.approval_id'] = null;
+				break;
+			case 'my':
+				$button_active['my'] = true;
+				// guaranteed a teacher or sub
+				if ($user_is_teacher) {
+					$selector = 'Absence.absentee_id';
+				} elseif ($user_is_sub) {
+					$selector = 'Absence.fulfiller_id';
+				} else {
+					CakeLog::error('AbsencesController::_index: "my" case activated for a non-teacher/sub');
+					break;
+				}
+				$conditions[$selector] = $this->Auth->user('id');
+				break;
+			case 'available':
+				$button_active['available'] = true;
+				$conditions['Absence.fulfiller_id'] = null;
+				break;
+			default:
+				$button_active['all'] = true;
+				// index case
+				break;
+		}
+		$this->set('button_active', $button_active);
+
 		$this->paginate = array(
-			'conditions' => $conditions
+			'conditions' => $conditions,
+			'limit' => 10,
 		);
 
 		$this->Absence->recursive = 0;
 		$this->set('absences', $this->paginate());
+		
 		$schools = $this->Absence->School->find('list');
 		$teachers = $this->Absence->Absentee->find('list', array('conditions' => array('Absentee.role' => 'teacher')));
-		$show_filters = true;
-		$page_legend = 'Search Absences';
-		$this->set(compact('schools', 'teachers', 'show_filters', 'filter', 'page_legend'));
+		$schools_flat = '["' . implode('","', array_values($schools)) . '"]';
+		$teachers_flat = '["' . implode('","', array_values($teachers)) . '"]';
+		
+		$this->set(compact('schools_flat', 'teachers_flat'));
 	}
 
 /**
@@ -101,27 +211,7 @@ class AbsencesController extends AppController {
  * the index view
  */
 	public function pending() {
-		// include absences helper for formatting date ranges
-		$this->helpers[] = 'Absence';
-
-		// verify that the admin belongs to a school
-		$school_id = $this->Auth->user('school_id');
-		if (empty($school_id)) {
-			$this->Session->setFlash('You belong to no school', 'error');
-		}
-
-		$this->paginate = array(
-			'conditions' => array(
-				'Absence.school_id' => $school_id,
-				'Absence.approval_id' => null
-			)
-		);
-		$absences = $this->paginate();
-
-		$page_legend = 'Absences pending approval';
-		$show_filters = false;
-		$this->set(compact('absences', 'page_legend', 'show_filters'));
-		$this->set(compact('school_id'));
+		$this->_index('pending');
 		$this->render('index');
 	}
 
@@ -130,29 +220,56 @@ class AbsencesController extends AppController {
  * the index view
  */
 	public function my() {
-		// include absences helper for formatting date ranges
-		$this->helpers[] = 'Absence';
-
-		$user_is_teacher = $this->Auth->user('role') === 'teacher';
-		$user_is_sub = $this->Auth->user('role') === 'substitute';
-
-		if ($user_is_teacher) {
-			$conditions = array(
-				'Absence.absentee_id' => $this->Auth->user('id'),
-			);
-		} elseif ($user_is_sub) {
-			$conditions = array(
-				'Absence.fulfiller_id' => $this->Auth->user('id'),
-			);
+		$this->_index('my');
+		$this->render('index');
+	}
+	
+	public function available() {
+		$this->_index('available');
+		$this->render('index');
+	}
+	
+	public function search() {
+		$query =& $this->request->data['query'];
+		if (!empty($query)) {
+			// find all the search terms
+			preg_match_all('/(?<key>\w+):\s*(?<value>\w+)/', $query, $matches, PREG_SET_ORDER);
+			
+			// convert regex matches to conditions
+			$conditions = array();
+			foreach ($matches as $match) {
+				switch ($match['key']) {
+					case 'absentee':
+						if ($match['value'] === 'none') {
+							$conditions['Absence.absentee_id'] = null;
+						} else {
+							$absentee = $this->Absence->Absentee->findAllByUsername($match['value'], 'id', null, 1, null, 0);
+							if (count($absentee) === 1) {
+								$conditions['Absence.absentee_id'] = $absentee[0]['Absentee']['id'];
+							}
+						}
+						break;
+					case 'fulfiller':
+						if ($match['value'] === 'none') {
+							$conditions['Absence.fulfiller_id'] = null;
+						} else {
+							$fulfiller = $this->Absence->Fulfiller->findAllByUsername($match['value'], 'id', null, 1, null, 0);
+							if (count($fulfiller) === 1) {
+								$conditions['Absence.fulfiller_id'] = $fulfiller[0]['Fulfiller']['id'];
+							}
+						}
+						break;
+				}
+			}
+			
+			$this->set(compact('conditions'));
 		}
-
+	
 		$this->paginate = array(
 			'conditions' => $conditions,
 			'order' => 'Absence.start DESC'
 		);
 		$this->set('absences', $this->paginate());
-		$this->set('show_filters', false);
-		$this->set('page_legend', 'My Absences');
 		$this->render('index');
 	}
 
@@ -318,6 +435,8 @@ class AbsencesController extends AppController {
  */
 public function add() {
 		if ($this->request->is('post')) {
+			// put in current user's id
+			$this->request->data['Absence']['absentee_id'] = $this->Auth->user('id');
 			$this->Absence->create();
 			if ($this->Absence->save($this->request->data)) {
 				$this->Session->setFlash(__('The absence has been saved'), 'success');
@@ -327,25 +446,15 @@ public function add() {
 				$this->Session->setFlash(__('The absence could not be saved. Please, try again.'), 'error');
 			}
 		}
-		$absentees = $this->Absence->Absentee->find(
-			'list',
-			array(
-				'conditions' => array('Absentee.role' => 'teacher')
-			)
-		);
-		$fulfillers = $this->Absence->Fulfiller->find(
-			'list',
-			array(
-				'conditions' => array('Fulfiller.role' => 'substitute')
-			)
-		);
+		//$absentees = $this->Absence->Absentee->find('list', array('conditions' => array('Absentee.role' => 'teacher')));
+		//$fulfillers = $this->Absence->Fulfiller->find('list', array('conditions' => array('Fulfiller.role' => 'substitute')));
 		$schools = $this->Absence->School->find('list');
 		
 		// set defaults for the form
-		$default_absentee_id = $this->Auth->user('id');
-		$default_school_id = $this->Auth->user('school_id');
+		$defaults['absentee_id'] = $this->Auth->user('id');
+		$defaults['school_id'] = $this->Auth->user('school_id');
 		
-		$this->set(compact('absentees', 'fulfillers', 'schools', 'default_absentee_id', 'default_school_id'));
+		$this->set(compact('schools', 'defaults'));
 	}
 
 /**
@@ -360,19 +469,35 @@ public function add() {
 			throw new NotFoundException(__('Invalid absence'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+			// put together date/time fields
+			$this->request->data['Absence']['start'] = Sanitize::clean($this->request->data['Absence']['start_date'].' '.$this->request->data['Absence']['start_time']);
+			$this->request->data['Absence']['end'] = Sanitize::clean($this->request->data['Absence']['end_date'].' '.$this->request->data['Absence']['end_time']);
+			
+			// strip data non-admins shouldn't be able to set
+			// TODO is this necessary since form tokens are used?
+			if ($this->Auth->user('role') !== 'admin') {
+				unset($this->request->data['Absence']['fulfiller_id']);
+			}
+			
 			if ($this->Absence->save($this->request->data)) {
 				$this->Session->setFlash(__('The absence has been saved'), 'success');
 				$this->redirect(array('action' => 'view', $id));
 			} else {
 				$this->Session->setFlash(__('The absence could not be saved. Please, try again.'), 'error');
+				$validationErrors = $this->Absence->validationErrors;
 			}
 		} else {
 			$this->request->data = $this->Absence->read(null, $id);
 		}
-		$absentees = $this->Absence->Absentee->find('list');
-		$fulfillers = $this->Absence->Fulfiller->find('list', array('conditions' => array('Fulfiller.role' => 'substitute')));
+		
+		// split date/time fields
+		$this->request->data['Absence']['start_date'] = date('Y-m-d', strtotime($this->request->data['Absence']['start']));
+		$this->request->data['Absence']['start_time'] = date('H:i', strtotime($this->request->data['Absence']['start']));
+		$this->request->data['Absence']['end_date'] = date('Y-m-d', strtotime($this->request->data['Absence']['end']));
+		$this->request->data['Absence']['end_time'] = date('H:i', strtotime($this->request->data['Absence']['end']));
+		
 		$schools = $this->Absence->School->find('list');
-		$this->set(compact('absentees', 'fulfillers', 'schools'));
+		$this->set(compact('schools'));
 	}
 
 /**
@@ -489,7 +614,7 @@ public function add() {
 /**
  * Prepares information for display on the dashboard
  */
-	public function dashboard() {
+	/*public function dashboard() {
 		$this->set('title_for_layout', 'Dashboard');
 		$this->set('layout_current', array('dashboard' => true));
 		$this->helpers[] = 'Notification';
@@ -560,19 +685,5 @@ public function add() {
 			)));
 		}
 		$this->set(compact('notifications'));
-	}
-	
-	/*public function ajaxTest($id = null) {
-		if ($this->request->is('ajax'))
-		{
-			CakeLog::debug('is ajax');
-			$this->Absence->id = $id;
-			if (!$this->Absence->exists()) {
-				throw new NotFoundException(__('Invalid absence'));
-			}
-			$this->set('absence', $this->Absence->read(null, $id));
-			$this->render('view', 'ajax');
-		}
-		
 	}*/
 }

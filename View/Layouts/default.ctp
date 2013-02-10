@@ -25,7 +25,7 @@
 		<?php echo 'PlentyOfSubs | '; ?>
 		<?php echo $title_for_layout; ?>
 	</title>
-	<style type="text/css">
+	<style>
 		body {
 			padding-top: 60px;
 			padding-bottom: 40px;
@@ -34,50 +34,85 @@
 	<?php
 		echo $this->Html->css('ui-lightness/jquery-ui-1.10.0.custom');
 		echo $this->Html->css('bootstrap.min');
+		echo $this->Html->css('jquery.ui.timepicker');
 		
 
 		echo $this->Html->script('jquery-1.9.0.min');
 		echo $this->Html->script('jquery-ui-1.10.0.custom.min');
+		echo $this->Html->script('jquery.ui.timepicker');
 		echo $this->Html->script('bootstrap.min');
-		echo $scripts_for_layout;
+		echo $this->fetch('script');
 	?>
+	<!-- put this script and style in appropriate places sometime -->
+	<script>
+		$(function() {
+			$('.datepicker').datepicker({
+				dateFormat: 'yy-mm-dd'
+			});
+			$('.timepicker').timepicker();
+			$('.alert').alert();
+		});
+	</script>
+	<style>
+		.hovered {
+			background: #eee;
+		}
+	</style>
 </head>
 <body>
-	<div class="navbar navbar-inverse navbar-fixed-top">
-		<div class="navbar-inner">
-			<div class="container">
-				<?php echo $this->Html->link('PlentyOfSubs', array('controller' => 'pages', 'action' => 'display', 'home'), array('class' => 'brand')); ?>
-				<?php if ($logged_in): ?>
-					<?php
-						$dashboardLiClass = isset($layout_current['dashboard']) ? 'active' : '';
-						$absencesLiClass = isset($layout_current['absences']) ? 'active' : '';
-					?>
-					<ul class="nav">
-						<li class="<?php echo $dashboardLiClass; ?>"><?php echo $this->Html->link('Dashboard', array('controller' => 'absences', 'action' => 'dashboard')); ?></li>
-						<li class="dropdown <?php echo $absencesLiClass; ?>">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Absences <b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><?php echo $this->Html->link('My Absences', array('controller' => 'absences', 'action' => 'my'), array ('tabindex' => '-1')); ?></li>
-								<li><?php echo $this->Html->link('Search Absences', array('controller' => 'absences', 'action' => 'index'), array ('tabindex' => '-1')); ?></li>
-								<li><?php echo $this->Html->link('Pending Absences', array('controller' => 'absences', 'action' => 'pending'), array ('tabindex' => '-1')); ?></li>
-								<li><?php echo $this->Html->link('Create Absence', array('controller' => 'absences', 'action' => 'add'), array ('tabindex' => '-1')); ?></li>
-							</ul>
-						</li>
-						<li><?php echo $this->Html->link('Welcome back, ' . $logged_in_firstname, array('controller' => 'users', 'action' => 'edit', $logged_in_userid)); ?></li>
-						<li><?php echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?></li>
-					</ul>
-				<?php else: ?>
-					<ul class="nav">
-						<li><?php echo $this->Html->link('Login', array('controller' => 'users', 'action' => 'login')); ?></li>
-					</ul>
-				<?php endif; ?>
-			</div>
-		</div>
-	</div>
+	<?php echo $this->element('navbar'); ?>
 	<div class="container">
 		<?php echo $this->Session->flash(); ?>
-
-		<?php echo $content_for_layout; ?>
+		
+		<?php
+			$controllers = array(
+				'absences' => 'Absences',
+				'users' => 'Users',
+				'schools' => 'Schools',
+			);
+		?>
+		<!-- action bar -->
+		<div class="row">
+			<div class="span2">
+				<div class="btn-group">
+					<?php echo $this->Html->link($controllers[$layout_current], array('action' => 'index'), array('class' => 'btn')); ?>
+					<button class="btn dropdown-toggle" data-toggle="dropdown">
+						<span class="caret"></span>
+					</button>
+					<!--<a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#">
+						<?php echo $controllers[$layout_current]; unset($controllers[$layout_current]); ?> <span class="caret"></span>
+					</a>-->
+					<ul class="dropdown-menu">
+						<?php unset($controllers[$layout_current]); ?>
+						<?php foreach($controllers as $key => $value): ?>
+							<li>
+								<?php echo $this->Html->link($value, array('controller' => $key, 'action' => 'index')); ?>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
+			</div>
+			<div class="span7">
+				<?php echo $this->fetch('actions'); ?>
+			</div>
+			<div class="span3">
+				<div class="pull-right">
+					<?php echo $this->fetch('pagination'); ?>
+				</div>
+			</div>
+		</div>
+		
+		<hr>
+		
+		<div class="row">
+			<!-- sidebar -->
+			<div class="span2">
+				<?php echo $this->fetch('sidebar'); ?>
+			</div>
+			<div class="span10">
+				<?php echo $this->fetch('content'); ?>
+			</div>
+		</div>
 		<?php echo $this->Js->writeBuffer(); ?>
 		<hr>
 		<footer>

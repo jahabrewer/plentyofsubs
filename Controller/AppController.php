@@ -8,7 +8,7 @@ class AppController extends Controller {
 		'Session',
 		'Security',
 		'Auth' => array(
-			'loginRedirect' => array('controller' => 'absences', 'action' => 'dashboard'),
+			'loginRedirect' => array('controller' => 'absences', 'action' => 'defaultview'),
 			'logoutRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
 			'authorize' => array('Controller'),
 			),
@@ -25,10 +25,16 @@ class AppController extends Controller {
 		$this->Auth->allow('display');
 		$logged_in = $this->Auth->loggedIn();
 		if ($logged_in) {
-			$this->set('logged_in_firstname', $this->Auth->user('first_name'));
-			$this->set('logged_in_userid', $this->Auth->user('id'));
+			$logged_in_user = array(
+				'id' => $this->Auth->user('id'),
+				'first_name' => $this->Auth->user('first_name'),
+				'last_name' => $this->Auth->user('last_name'),
+				'role' =>  $this->Auth->user('role'),
+			);
+			$this->set('logged_in_user', $logged_in_user);
 		}
 		$this->set(compact('logged_in'));
+		$this->set('referer', $this->referer());
 	}
 
 /**
@@ -53,6 +59,10 @@ class AppController extends Controller {
 		if (isset($user['role']) && $user['role'] === 'admin' && !in_array($this->action, array('my', 'apply', 'retract'))) {
 			return true;
 		}
+		if (in_array($this->action, array('search'))) {
+			return true;
+		}
+		
 		return false;
 	}
 

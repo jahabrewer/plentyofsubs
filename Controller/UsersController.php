@@ -27,6 +27,7 @@ class UsersController extends AppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->allow('logout');
+		$this->set('layout_current', 'users');
 	}
 
 	public function login() {
@@ -50,7 +51,29 @@ class UsersController extends AppController {
  */
 	public function index() {
 		$this->User->recursive = 0;
+		
+		// build conditions from filters
+		$conditions = array();
+		$filter =& $this->request->query;
+		
+		if (isset($filter['school']) && !empty($filter['school'])) {
+			$conditions['School.name'] = $this->request->data['filter']['school'] = $filter['school'];
+		}
+		if (isset($filter['role']) && !empty($filter['role'])) {
+			$conditions['User.role'] = $this->request->data['filter']['role'] = $filter['role'];
+		}
+		
+		$this->paginate = array(
+			'conditions' => $conditions,
+			'limit' => 10,
+		);
 		$this->set('users', $this->paginate());
+		
+		$schools = $this->User->School->find('list');
+		$schools_flat = '["' . implode('","', array_values($schools)) . '"]';
+		
+		$this->set(compact('schools_flat'));
+		$this->set('roles', array('admin' => 'Administrator', 'teacher' => 'Teacher', 'substitute' => 'Substitute'));
 	}
 
 /**
@@ -66,12 +89,11 @@ class UsersController extends AppController {
 		}
 		$user = $this->User->read(null, $id);
 		$role = $this->Auth->user('role');
-		// logic for show review could be better, but it would be
-		// expensive
-		$show_review = $role === 'teacher';
+		$roles = array('admin' => 'Administrator', 'teacher' => 'Teacher', 'substitute' => 'Substitute');
+		
 		$show_rating = $role !== 'substitute';
 		$show_edit = $show_delete = $role === 'admin';
-		$this->set(compact('user', 'show_review', 'show_rating', 'show_edit', 'show_delete'));
+		$this->set(compact('user', 'show_rating', 'show_edit', 'show_delete', 'roles'));
 	}
 
 /**
@@ -82,6 +104,15 @@ class UsersController extends AppController {
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->User->create();
+			
+			// strip info based on role
+			if ($this->request->data['User']['role'] === 'substitute') {
+				unset($this->request->data['User']['school_id']);
+			} else {
+				unset($this->request->data['User']['certification']);
+				unset($this->request->data['User']['education_level_id']);
+			}
+			
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('The user has been saved'), 'success');
 				$this->redirect(array('action' => 'index'));
@@ -91,8 +122,8 @@ class UsersController extends AppController {
 		}
 		$educationLevels = $this->User->EducationLevel->find('list');
 		$schools = $this->User->School->find('list');
-		$preferredSchools = $this->User->PreferredSchool->find('list');
-		$this->set(compact('educationLevels', 'schools', 'preferredSchools'));
+		$roles = array('admin' => 'Administrator', 'teacher' => 'Teacher', 'substitute' => 'Substitute');
+		$this->set(compact('educationLevels', 'schools', 'roles'));
 	}
 
 /**
@@ -109,7 +140,7 @@ class UsersController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('The user has been saved'), 'success');
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'view', $id));
 			} else {
 				$this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'error');
 			}
@@ -119,8 +150,10 @@ class UsersController extends AppController {
 		$roles = array('admin' => 'Administrator', 'teacher' => 'Teacher', 'substitute' => 'Substitute');
 		$educationLevels = $this->User->EducationLevel->find('list');
 		$schools = $this->User->School->find('list');
-		$preferredSchools = $this->User->PreferredSchool->find('list');
-		$this->set(compact('roles', 'educationLevels', 'schools', 'preferredSchools'));
+		//$preferredSchools = $this->User->PreferredSchool->find('list');
+		
+		$show_sub_fields = $this->request->data['User']['role'] === 'substitute';
+		$this->set(compact('roles', 'educationLevels', 'schools', 'show_sub_fields'));
 	}
 
 /**

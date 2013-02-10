@@ -24,6 +24,22 @@ class User extends AppModel {
 				'message' => 'A username is required'
 			)
 		),
+		'first_name' => array(
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'message' => 'A first name is required'
+			)
+		),
+		'last_name' => array(
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'message' => 'A username is required'
+			)
+		),
+		'middle_initial' => array(
+			'rule' => array('maxLength', 1),
+			'message' => 'Middle initial must be no more than 1 character'
+		),
 		'password' => array(
 			'required' => array(
 				'rule' => array('notEmpty'),
@@ -37,14 +53,10 @@ class User extends AppModel {
 				'allowEmpty' => false
 			)
 		),
-		'middle_initial' => array(
-			'rule' => array('maxLength', 1),
-			'message' => 'Middle initial must be no more than 1 character'
-		),
 		'primary_phone' => array(
 			'phone' => array(
 				'rule' => array('phone', null, 'us'),
-				'message' => 'Primary phone number must be a valid US phone number'
+				'message' => 'Must be a valid US phone number'
 			),
 			'required' => array(
 				'rule' => array('notEmpty'),
@@ -53,13 +65,13 @@ class User extends AppModel {
 		),
 		'secondary_phone' => array(
 			'rule' => array('phone', null, 'us'),
-			'message' => 'Secondary phone number must be a valid US phone number',
+			'message' => 'Must be a valid US phone number',
 			'allowEmpty' => true
 		),
 		'email_address' => array(
 			'email' => array(
 				'rule' => 'email',
-				'message' => 'This is not a valid email address'
+				'message' => 'Must be a valid email address'
 			),
 			'required' => array(
 				'rule' => array('notEmpty'),

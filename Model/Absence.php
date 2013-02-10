@@ -59,15 +59,33 @@ class Absence extends AppModel {
  * @var array
  */
 	public $validate = array(
+		'absentee_id' => array(
+			'notEmpty' => array(
+				'rule' => 'notEmpty',
+				'message' => 'This field cannot be left empty',
+			),
+		),
 		'room' => array(
 			'rule' => array('maxLength', 16),
 			'message' => 'Room number must be specified and no more than 16 characters',
-			'allowEmpty' => false
+			'allowEmpty' => false,
 		),
 		'start' => array(
-			'rule' => 'dateSanityCheck',
-			'message' => 'The start date/time must be before the end date/time',
-		)
+			array(
+				'rule' => 'datetime',
+				'message' => 'Must be a valid date and time',
+				'allowEmpty' => false,
+			),
+			array(
+				'rule' => 'dateSanityCheck',
+				'message' => 'The start date/time must be before the end date/time',
+			),
+		),
+		'end' => array(
+			'rule' => 'datetime',
+			'message' => 'Must be a valid date and time',
+			'allowEmpty' => false,
+		),
 	);
 
 /**
