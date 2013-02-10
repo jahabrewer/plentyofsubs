@@ -38,6 +38,8 @@ class PagesController extends AppController {
  */
 	public $name = 'Pages';
 
+	public $layout = 'basic';
+	
 /**
  * This controller does not use a model
  *

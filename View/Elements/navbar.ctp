@@ -2,13 +2,12 @@
 	<div class="navbar-inner">
 		<div class="container">
 			<?php echo $this->Html->link('PlentyOfSubs', array('controller' => 'pages', 'action' => 'display', 'home'), array('class' => 'brand')); ?>
-			<?php echo $this->Form->create(false, array('action' => 'search', 'class' => 'navbar-search pull-left')); ?>
+			<?php //echo $this->Form->create(false, array('action' => 'search', 'class' => 'navbar-search pull-left')); ?>
 				<?php
-					$search_placeholder = 'Search ';
-					if (isset($layout_current['absences'])) { $search_placeholder .= 'absences'; }
+					//$search_placeholder = 'Search ';
 				?>
-				<?php echo $this->Form->text('query', array('class' => 'search-query', 'placeholder' => $search_placeholder)); ?>
-			<?php echo $this->Form->end(); ?>
+				<?php //echo $this->Form->text('query', array('class' => 'search-query', 'placeholder' => $search_placeholder)); ?>
+			<?php //echo $this->Form->end(); ?>
 			<ul class="nav pull-right">
 				<?php if ($logged_in): ?>
 					<li>
