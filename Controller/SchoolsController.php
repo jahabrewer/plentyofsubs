@@ -61,9 +61,6 @@ class SchoolsController extends AppController {
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->School->create();
-			CakeLog::debug($this->request->data['School']['name']);
-			CakeLog::debug($this->request->data['School']['abbreviation']);
-			CakeLog::debug($this->request->data['School']['street_address']);
 			if ($this->School->save($this->request->data)) {
 				$this->Session->setFlash(__('The school has been saved'), 'success');
 				$this->redirect(array('action' => 'view', $this->School->getLastInsertId()));

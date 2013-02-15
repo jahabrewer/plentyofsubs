@@ -9,9 +9,7 @@
 	</div>
 <?php $this->end(); ?>
 
-<?php echo $this->element('clickable_rows'); ?>
-
-<table class="table">
+<table class="table clickable-rows">
 	<thead>
 		<tr>
 			<th></th>

@@ -9,8 +9,6 @@
 	</div>
 <?php $this->end(); ?>
 
-<?php echo $this->element('clickable_rows'); ?>
-
 <div class="well">
 	<?php echo $this->Form->create('filter', array('class' => 'form-inline', 'type' => 'GET', 'style' => 'text-align:center; margin:0px;')); ?>
 		<fieldset>
@@ -22,7 +20,7 @@
 	<?php echo $this->Form->end(); ?>
 </div>
 
-<table class="table">
+<table class="table clickable-rows">
 	<thead>
 		<tr>
 			<?php

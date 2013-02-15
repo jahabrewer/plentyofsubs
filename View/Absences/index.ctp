@@ -9,8 +9,6 @@
 	</div>
 <?php $this->end(); ?>
 
-<?php echo $this->element('clickable_rows'); ?>
-
 <?php if (empty($absences)): ?>
 	<p style="text-align:center;">No absences to show</p>
 <?php else: ?>
@@ -27,7 +25,7 @@
 		<?php echo $this->Form->end(); ?>
 	</div>
 
-	<table class="table">
+	<table class="table clickable-rows">
 		<thead>
 			<tr>
 				<?php

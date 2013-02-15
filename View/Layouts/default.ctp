@@ -25,12 +25,28 @@
 		'users' => 'Users',
 		'schools' => 'Schools',
 	);
+	$actions = array(
+		'absences' => 'index',
+		'users' => 'index',
+		'schools' => 'index',
+	);
+	$values = array(
+		'absences' => null,
+		'users' => null,
+		'schools' => null,
+	);
+	if ($logged_in_user['role'] !== 'admin') {
+		unset($controllers['schools']);
+		$actions['absences'] = 'my';
+		$actions['users'] = 'view';
+		$values['users'] = $logged_in_user['id'];
+	}
 ?>
 <!-- action bar -->
 <div class="row">
 	<div class="span2">
 		<div class="btn-group">
-			<?php echo $this->Html->link($controllers[$layout_current], array('action' => 'index'), array('class' => 'btn')); ?>
+			<?php echo $this->Html->link($controllers[$layout_current], array('action' => $actions[$layout_current], $values[$layout_current]), array('class' => 'btn')); ?>
 			<button class="btn dropdown-toggle" data-toggle="dropdown">
 				<span class="caret"></span>
 			</button>
@@ -41,7 +57,7 @@
 				<?php unset($controllers[$layout_current]); ?>
 				<?php foreach($controllers as $key => $value): ?>
 					<li>
-						<?php echo $this->Html->link($value, array('controller' => $key, 'action' => 'index')); ?>
+						<?php echo $this->Html->link($value, array('controller' => $key, 'action' => $actions[$key], $values[$key])); ?>
 					</li>
 				<?php endforeach; ?>
 			</ul>

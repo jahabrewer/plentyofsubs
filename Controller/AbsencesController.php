@@ -229,7 +229,7 @@ class AbsencesController extends AppController {
 		$this->render('index');
 	}
 	
-	public function search() {
+	/*public function search() {
 		$query =& $this->request->data['query'];
 		if (!empty($query)) {
 			// find all the search terms
@@ -271,7 +271,7 @@ class AbsencesController extends AppController {
 		);
 		$this->set('absences', $this->paginate());
 		$this->render('index');
-	}
+	}*/
 
 /**
  * Creates an application for an absence from the logged in user
